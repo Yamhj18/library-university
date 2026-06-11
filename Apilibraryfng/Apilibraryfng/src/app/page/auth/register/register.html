@@ -1,0 +1,77 @@
+<div class="login-wrapper">
+    <div class="login-card">
+
+        <div class="login-header">
+            <i class="pi pi-user-plus login-icon"></i>
+            <h1>Crear cuenta</h1>
+            <p>Regístrate para acceder al catálogo</p>
+        </div>
+
+        <form [formGroup]="frmRegister">
+
+            <div class="flex flex-col gap-2 mb-4">
+                <label class="font-medium">Nombre completo</label>
+                <input pInputText formControlName="fullName" placeholder="Tu nombre completo" class="w-full"/>
+                @if((fullNameFb.touched || fullNameFb.dirty) && fullNameFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+            </div>
+
+            <div class="flex flex-col gap-2 mb-4">
+                <label class="font-medium">Correo electrónico</label>
+                <input pInputText formControlName="email" placeholder="correo@unamba.edu.pe" class="w-full"/>
+                @if((emailFb.touched || emailFb.dirty) && emailFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+                @if((emailFb.touched || emailFb.dirty) && emailFb.hasError('email')) {
+                    <small class="errorMessage">Correo no válido.</small>
+                }
+            </div>
+
+            <div class="flex flex-col gap-2 mb-4">
+                <label class="font-medium">Contraseña</label>
+                <p-password
+                    formControlName="password"
+                    placeholder="Mínimo 6 caracteres"
+                    [toggleMask]="true"
+                    class="w-full"
+                />
+                @if((passwordFb.touched || passwordFb.dirty) && passwordFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+                @if((passwordFb.touched || passwordFb.dirty) && passwordFb.hasError('minlength')) {
+                    <small class="errorMessage">Mínimo 6 caracteres.</small>
+                }
+            </div>
+
+            @if(errorMessage) {
+                <div class="error-alert mb-4">
+                    <i class="pi pi-exclamation-circle"></i>
+                    <span>{{ errorMessage }}</span>
+                </div>
+            }
+
+            @if(successMessage) {
+                <div class="success-alert mb-4">
+                    <i class="pi pi-check-circle"></i>
+                    <span>{{ successMessage }}</span>
+                </div>
+            }
+
+            <p-button
+                label="Crear cuenta"
+                severity="primary"
+                class="w-full"
+                styleClass="w-full"
+                (click)="sendRegister()"
+            />
+
+        </form>
+
+        <div class="login-footer">
+            <span>¿Ya tienes cuenta?</span>
+            <a (click)="goToLogin()" class="register-link">Inicia sesión</a>
+        </div>
+
+    </div>
+</div>

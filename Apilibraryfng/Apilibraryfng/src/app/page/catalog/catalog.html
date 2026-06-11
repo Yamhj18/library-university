@@ -1,0 +1,66 @@
+<div class="catalog-container">
+
+    <!-- Header -->
+    <div class="catalog-header mb-6">
+        <h1 class="text-3xl font-bold text-slate-800">UNAMBA Libreria</h1>
+        <p class="text-slate-500 mt-1">Explorar libros disponibles</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="flex flex-col md:flex-row gap-3 mb-6">
+        <div class="flex gap-2 flex-1">
+            <input
+                pInputText
+                [(ngModel)]="searchText"
+                placeholder="Buscar por título, autor o código..."
+                class="w-full"
+                (keyup.enter)="onSearch()"
+            />
+            <p-button icon="pi pi-search" (click)="onSearch()" />
+        </div>
+        <p-select
+            [options]="listCategory"
+            [(ngModel)]="selectedCategory"
+            optionLabel="name"
+            placeholder="Todas las categorías"
+            class="w-full md:w-64"
+            (onChange)="onCategoryChange()"
+        />
+    </div>
+
+    <!-- Books Grid -->
+    @if(listBook.length === 0) {
+        <div class="flex flex-col items-center justify-center py-20 text-slate-400">
+            <i class="pi pi-book text-6xl mb-4"></i>
+            <p class="text-xl">Todas las categorías</p>
+        </div>
+    } @else {
+        <div class="books-grid">
+            @for(book of listBook; track book.idBook) {
+                <div class="book-card">
+                    <div class="book-image-container">
+                        <img [src]="getImageUrl(book)" [alt]="book.title" class="book-image"/>
+                        <div class="book-status">
+                            <p-tag
+                                [value]="book.status === 'Available' ? 'Disponible' : 'No disponible'"
+                                [severity]="getStatusSeverity(book.status)"
+                            />
+                        </div>
+                    </div>
+                    <div class="book-info">
+                        <p class="book-category">{{ book.categoryName }}</p>
+                        <h3 class="book-title">{{ book.title }}</h3>
+                        <p class="book-author">{{ book.author }}</p>
+                        <div class="book-footer">
+                            <span class="book-code">{{ book.code }}</span>
+                            <span class="book-stock">
+                                <i class="pi pi-clone"></i> {{ book.stock }} disponibles
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+</div>

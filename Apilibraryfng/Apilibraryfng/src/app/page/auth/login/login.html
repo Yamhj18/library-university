@@ -1,0 +1,65 @@
+<div class="login-wrapper">
+    <div class="login-card">
+
+        <div class="login-header">
+            <i class="pi pi-book login-icon"></i>
+            <h1>UNAMBA Library</h1>
+            <p>Inicia sesión para continuar</p>
+        </div>
+
+        <form [formGroup]="frmLogin">
+
+            <div class="flex flex-col gap-2 mb-4">
+                <label class="font-medium">Correo electrónico</label>
+                <input
+                    pInputText
+                    formControlName="email"
+                    placeholder="correo@unamba.edu.pe"
+                    class="w-full"
+                />
+                @if((emailFb.touched || emailFb.dirty) && emailFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+                @if((emailFb.touched || emailFb.dirty) && emailFb.hasError('email')) {
+                    <small class="errorMessage">Correo no válido.</small>
+                }
+            </div>
+
+            <div class="flex flex-col gap-2 mb-4">
+                <label class="font-medium">Contraseña</label>
+                <p-password
+                    formControlName="password"
+                    placeholder="••••••••"
+                    [feedback]="false"
+                    [toggleMask]="true"
+                    class="w-full"
+                />
+                @if((passwordFb.touched || passwordFb.dirty) && passwordFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+            </div>
+
+            @if(errorMessage) {
+                <div class="error-alert mb-4">
+                    <i class="pi pi-exclamation-circle"></i>
+                    <span>{{ errorMessage }}</span>
+                </div>
+            }
+
+            <p-button
+                label="Iniciar sesión"
+                severity="primary"
+                class="w-full"
+                styleClass="w-full"
+                (click)="sendLogin()"
+            />
+
+        </form>
+
+        <div class="login-footer">
+            <span>¿No tienes cuenta?</span>
+            <a (click)="goToRegister()" class="register-link">Regístrate aquí</a>
+        </div>
+
+    </div>
+</div>

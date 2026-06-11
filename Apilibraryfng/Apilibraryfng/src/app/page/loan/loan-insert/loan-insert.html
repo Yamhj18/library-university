@@ -1,0 +1,87 @@
+<div class="card bg-white shadow-sm rounded-lg w-full p-4">
+    <h2 class="text-xl font-bold mb-4">Registrar Préstamo</h2>
+    <form [formGroup]="frmLoanInsert">
+        <div class="grid grid-cols-1 gap-4 mb-3">
+            <div class="flex flex-col gap-2">
+                <label class="font-medium">Libro*</label>
+                <p-autoComplete formControlName="book" [suggestions]="listBookSuggestions" (completeMethod)="searchBook($event)" optionLabel="displayName" placeholder="Buscar por título, autor o código..." class="w-full" [forceSelection]="true"/>
+                @if((bookFb.touched || bookFb.dirty) && bookFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+            <div class="flex flex-col gap-2">
+                <label class="font-medium">Código de estudiante*</label>
+                <input pInputText formControlName="studentCode" placeholder="ej. 2022100123" class="w-full"/>
+                @if((studentCodeFb.touched || studentCodeFb.dirty) && studentCodeFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-medium">Nombre del estudiante*</label>
+                <input pInputText formControlName="studentName" placeholder="Nombre completo" class="w-full"/>
+                @if((studentNameFb.touched || studentNameFb.dirty) && studentNameFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+            <div class="flex flex-col gap-2">
+                <label class="font-medium">Facultad*</label>
+                <p-select
+                    [options]="listFaculty"
+                    formControlName="faculty"
+                    optionLabel="name"
+                    placeholder="Seleccione una facultad"
+                    class="w-full"
+                />
+                @if((facultyFb.touched || facultyFb.dirty) && facultyFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-medium">Número de celular*</label>
+                <input pInputText formControlName="phoneNumber" placeholder="ej. 987654321" class="w-full"/>
+                @if((phoneNumberFb.touched || phoneNumberFb.dirty) && phoneNumberFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+            <div class="flex flex-col gap-2">
+                <label class="font-medium">Tipo de garantía*</label>
+                <div class="flex gap-4 mt-1">
+                    <div class="flex items-center gap-2">
+                        <p-radioButton name="guaranteeType" value="DNI" formControlName="guaranteeType" inputId="rdDni"/>
+                        <label for="rdDni">DNI</label>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <p-radioButton name="guaranteeType" value="Carnet" formControlName="guaranteeType" inputId="rdCarnet"/>
+                        <label for="rdCarnet">Carnet</label>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-medium">Número de garantía*</label>
+                <input pInputText formControlName="guaranteeNumber" placeholder="Número de identificación" class="w-full"/>
+                @if((guaranteeNumberFb.touched || guaranteeNumberFb.dirty) && guaranteeNumberFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+            </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
+            <div class="flex flex-col gap-2">
+                <label class="font-medium">Fecha estimada de devolución*</label>
+                <p-datepicker formControlName="estimatedReturnDate" [showIcon]="true" dateFormat="dd/mm/yy" [minDate]="minDate" placeholder="Seleccione una fecha" class="w-full"/>
+                @if((estimatedReturnDateFb.touched || estimatedReturnDateFb.dirty) && estimatedReturnDateFb.hasError('required')) {
+                    <small class="errorMessage">Campo requerido.</small>
+                }
+            </div>
+        </div>
+        <hr>
+        <div class="flex justify-end mt-3">
+            <p-button label="Registrar préstamo" severity="info" (click)="sendInsert($event)"/>
+        </div>
+    </form>
+</div>
