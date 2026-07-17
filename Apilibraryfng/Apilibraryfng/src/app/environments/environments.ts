@@ -1,4 +1,4 @@
 export const environment = {
-    production: false,
-    urlBase: 'https://tu-backend.up.railway.app'
+    production: true,
+    urlBase: 'https://library-university-production.up.railway.app'
 };
