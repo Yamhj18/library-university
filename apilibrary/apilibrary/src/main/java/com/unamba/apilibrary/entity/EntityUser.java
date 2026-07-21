@@ -14,11 +14,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EntityUser {
+
     @Id
-    @Column(name = "idUser")
+    @Column(name = "id_user")
     private String idUser;
 
-    @Column(name = "fullName")
+    @Column(name = "full_name")
     private String fullName;
 
     @Column(name = "email")
@@ -33,9 +34,9 @@ public class EntityUser {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private Date createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private Date updatedAt;
 }
