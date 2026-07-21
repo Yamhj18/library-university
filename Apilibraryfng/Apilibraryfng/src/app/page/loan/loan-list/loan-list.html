@@ -1,82 +1,118 @@
-<div class="p-2">
-    <h2 class="text-xl font-bold mb-4">Devolución de Libros</h2>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Devolución de Libros</h1>
+        <p class="page-subtitle">Gestiona la recepción de los libros prestados y revisa vencimientos</p>
+    </div>
+</div>
 
-    @if(listOverdue.length > 0) {
-        <div class="overdue-panel mb-6">
-            <div class="overdue-header">
-                <i class="pi pi-exclamation-triangle"></i>
-                <span>Préstamos vencidos ({{ listOverdue.length }})</span>
-            </div>
-            <div class="overdue-list">
-                @for(loan of listOverdue; track loan.idLoan) {
-                    <div class="overdue-item">
-                        <div>
-                            <p class="font-semibold">{{ loan.studentName }}</p>
-                            <p class="text-sm text-gray-500">{{ loan.bookTitle }}</p>
+@if(listOverdue.length > 0) {
+    <div class="mb-6 animate-fade-in-up">
+        <div class="bg-red-50 border border-red-200 rounded-t-xl px-4 py-3 flex items-center gap-2">
+            <i class="pi pi-exclamation-triangle text-red-600 text-lg"></i>
+            <span class="font-bold text-red-800 text-lg">Préstamos vencidos ({{ listOverdue.length }})</span>
+        </div>
+        <div class="bg-white border border-t-0 border-red-200 rounded-b-xl shadow-sm divide-y divide-red-100 max-h-60 overflow-y-auto">
+            @for(loan of listOverdue; track loan.idLoan) {
+                <div class="p-4 flex items-center justify-between hover:bg-red-50/50 transition-colors">
+                    <div>
+                        <p class="font-bold text-surface-900">{{ loan.studentName }}</p>
+                        <p class="text-sm text-surface-600 flex items-center gap-1 mt-0.5">
+                            <i class="pi pi-book text-xs"></i> {{ loan.bookTitle }}
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm font-bold text-red-600">Venció: {{ loan.estimatedReturnDate | date:'dd/MM/yyyy' }}</p>
+                        <p class="text-xs text-surface-500 font-medium mt-0.5">Garantía: {{ loan.guaranteeType }} ({{ loan.guaranteeNumber }})</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+<div class="card p-5 mb-6 animate-fade-in-up" style="animation-delay: 0.1s;">
+    <div class="flex gap-3">
+        <span class="p-input-icon-left w-full block">
+            <i class="pi pi-search text-surface-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input 
+                pInputText 
+                [(ngModel)]="searchText" 
+                placeholder="Buscar por nombre de estudiante o código..." 
+                class="input-field pl-10 w-full" 
+                (keyup.enter)="onSearch()"
+            />
+        </span>
+        <button class="btn-primary flex items-center justify-center whitespace-nowrap px-6" (click)="onSearch()">
+            <i class="pi pi-search mr-2"></i> Buscar
+        </button>
+    </div>
+</div>
+
+<div class="card overflow-hidden animate-fade-in-up" style="animation-delay: 0.2s;">
+    <p-table [value]="listLoan" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm">
+        <ng-template pTemplate="header">
+            <tr>
+                <th class="bg-surface-50 text-surface-600 font-semibold py-3 px-4 text-left">Código</th>
+                <th class="bg-surface-50 text-surface-600 font-semibold py-3 px-4 text-left">Libro</th>
+                <th class="bg-surface-50 text-surface-600 font-semibold py-3 px-4 text-left">Estudiante</th>
+                <th class="bg-surface-50 text-surface-600 font-semibold py-3 px-4 text-left">Garantía</th>
+                <th class="bg-surface-50 text-surface-600 font-semibold py-3 px-4 text-left">Fechas</th>
+                <th class="bg-surface-50 text-surface-600 font-semibold py-3 px-4 text-center w-32">Acción</th>
+            </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="body" let-loan>
+            <tr class="border-b border-surface-100 hover:bg-surface-50 transition-colors" [ngClass]="{'bg-red-50/30 hover:bg-red-50/60': isOverdue(loan)}">
+                <td class="py-3 px-4">
+                    <span class="text-xs font-mono bg-surface-100 text-surface-700 px-2 py-1 rounded">{{ loan.code }}</span>
+                </td>
+                <td class="py-3 px-4">
+                    <p class="font-bold text-surface-900 leading-tight mb-0.5 line-clamp-1" [title]="loan.bookTitle">{{ loan.bookTitle }}</p>
+                    <p class="text-xs text-surface-500 font-mono">{{ loan.bookCode }}</p>
+                </td>
+                <td class="py-3 px-4">
+                    <p class="font-semibold text-surface-800 leading-tight mb-0.5">{{ loan.studentName }}</p>
+                    <p class="text-xs text-surface-500 flex items-center gap-2">
+                        <span class="font-mono">{{ loan.studentCode }}</span>
+                        <span>•</span>
+                        <span><i class="pi pi-phone text-[10px]"></i> {{ loan.phoneNumber }}</span>
+                    </p>
+                </td>
+                <td class="py-3 px-4">
+                    <p class="font-medium text-surface-700 mb-0.5">{{ loan.guaranteeType }}</p>
+                    <p class="text-xs text-surface-500">{{ loan.guaranteeNumber }}</p>
+                </td>
+                <td class="py-3 px-4">
+                    <div class="flex flex-col gap-1 text-sm">
+                        <div class="flex items-center justify-between gap-4">
+                            <span class="text-surface-500 text-xs">Préstamo:</span>
+                            <span class="font-medium text-surface-700">{{ loan.loanDate | date:'dd/MM/yyyy' }}</span>
                         </div>
-                        <div class="text-right">
-                            <p class="text-sm font-medium text-red-600">Venció: {{ loan.estimatedReturnDate | date:'dd/MM/yyyy' }}</p>
-                            <p class="text-xs text-gray-400">{{ loan.guaranteeType }}: {{ loan.guaranteeNumber }}</p>
+                        <div class="flex items-center justify-between gap-4">
+                            <span class="text-surface-500 text-xs">Límite:</span>
+                            <span class="font-medium" [ngClass]="isOverdue(loan) ? 'text-red-600 font-bold' : 'text-primary-700'">
+                                {{ loan.estimatedReturnDate | date:'dd/MM/yyyy' }}
+                            </span>
                         </div>
                     </div>
-                }
-            </div>
-        </div>
-    }
-
-    <div class="flex gap-2 mb-4">
-        <input pInputText [(ngModel)]="searchText" placeholder="Buscar por nombre de estudiante o código..." class="w-full" (keyup.enter)="onSearch()"/>
-        <p-button icon="pi pi-search" (click)="onSearch()"/>
-    </div>
-
-    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-        <p-table [value]="listLoan" [paginator]="true" [rows]="10" responsiveLayout="scroll">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th>Código</th>
-                    <th>Libro</th>
-                    <th>Estudiante</th>
-                    <th>Facultad</th>
-                    <th>Celular</th>
-                    <th>Garantía</th>
-                    <th>Fecha préstamo</th>
-                    <th>Fecha vencimiento</th>
-                    <th>Acciones</th>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="body" let-loan>
-                <tr [class.overdue-row]="isOverdue(loan)">
-                    <td>{{ loan.code }}</td>
-                    <td>
-                        <p class="font-medium">{{ loan.bookTitle }}</p>
-                        <p class="text-xs text-gray-400">{{ loan.bookCode }}</p>
-                    </td>
-                    <td>
-                        <p class="font-medium">{{ loan.studentName }}</p>
-                        <p class="text-xs text-gray-400">{{ loan.studentCode }}</p>
-                    </td>
-                    <td>{{ loan.faculty }}</td>
-                    <td>{{ loan.phoneNumber }}</td>
-                    <td>
-                        <p class="font-medium">{{ loan.guaranteeType }}</p>
-                        <p class="text-xs text-gray-400">{{ loan.guaranteeNumber }}</p>
-                    </td>
-                    <td>{{ loan.loanDate | date:'dd/MM/yyyy' }}</td>
-                    <td>
-                        <span [class.text-red-600]="isOverdue(loan)" [class.font-bold]="isOverdue(loan)">
-                            {{ loan.estimatedReturnDate | date:'dd/MM/yyyy' }}
-                        </span>
-                    </td>
-                    <td>
-                        <p-button label="Devolver" severity="success" size="small" (click)="confirmReturn($event, loan.idLoan)"/>
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="9" class="text-center py-8 text-gray-400">No se encontraron préstamos activos.</td>
-                </tr>
-            </ng-template>
-        </p-table>
-    </div>
+                </td>
+                <td class="py-3 px-4 text-center">
+                    <button type="button" class="btn-primary bg-emerald-600 hover:bg-emerald-700 w-full py-1.5 text-sm" (click)="confirmReturn($event, loan.idLoan)">
+                        <i class="pi pi-check-circle mr-1"></i> Devolver
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="6">
+                    <div class="flex flex-col items-center justify-center py-12 text-surface-400">
+                        <i class="pi pi-inbox text-5xl mb-3 text-surface-300"></i>
+                        <p class="text-lg font-medium">No se encontraron préstamos activos</p>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
 </div>

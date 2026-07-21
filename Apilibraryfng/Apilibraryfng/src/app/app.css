@@ -1,105 +1,109 @@
+@reference "../styles.css";
+
 .layout-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
+    @apply flex flex-col h-screen bg-surface-50 overflow-hidden;
 }
 
 .layout-topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 1.5rem;
-    height: 60px;
-    background-color: #1e293b;
-    color: white;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    @apply flex items-center justify-between px-6 h-16 bg-white border-b border-surface-200 z-50 shrink-0 shadow-sm transition-all;
 }
 
 .topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    @apply flex items-center gap-4;
+}
+
+.app-logo-container {
+    @apply flex items-center gap-2;
+}
+
+.logo-icon {
+    @apply flex items-center justify-center w-8 h-8 rounded-lg bg-primary-800 text-white font-bold text-lg shadow-sm;
 }
 
 .app-logo {
-    font-size: 1.2rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    @apply text-lg font-bold tracking-tight text-surface-900;
 }
 
 .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    @apply flex items-center gap-4;
 }
 
 .user-profile {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
+    @apply flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-surface-100 cursor-pointer transition-colors border border-transparent hover:border-surface-200;
+}
+
+.user-avatar {
+    @apply w-8 h-8 rounded-full bg-primary-100 text-primary-800 flex items-center justify-center font-bold text-sm border border-primary-200;
+}
+
+.user-info {
+    @apply hidden md:flex flex-col items-start;
 }
 
 .username {
-    font-size: 0.9rem;
+    @apply text-sm font-semibold text-surface-900 leading-tight;
+}
+
+.user-role {
+    @apply text-xs text-surface-500 leading-tight font-medium;
 }
 
 .layout-body {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
+    @apply flex flex-1 overflow-hidden relative;
 }
 
 .layout-sidebar {
-    width: 220px;
-    min-width: 220px;
-    background-color: #ffffff;
-    border-right: 1px solid #e2e8f0;
-    overflow-y: auto;
-    padding: 1rem 0.75rem;
+    @apply w-64 shrink-0 bg-white border-r border-surface-200 flex flex-col overflow-y-auto transition-all duration-300;
 }
 
-.layout-main {
-    flex: 1;
-    overflow-y: auto;
-    background-color: #f1f5f9;
+.sidebar-content {
+    @apply p-4 flex-1;
 }
- /* para agrandar */
-.content-wrapper {
-    padding: 1.5rem;
-    margin: 0 auto;
+
+.nav-section-title {
+    @apply text-xs font-bold text-surface-400 uppercase tracking-wider mb-2 mt-4 px-3;
 }
 
 .nav-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    @apply flex flex-col gap-1 list-none p-0 m-0;
 }
 
 .nav-link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    color: #374151;
-    text-decoration: none;
-    transition: background-color 0.2s;
-    margin-bottom: 0.25rem;
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-surface-600 font-medium transition-all hover:bg-surface-100 hover:text-surface-900;
 }
 
-.nav-link:hover {
-    background-color: #f1f5f9;
+.nav-link i {
+    @apply text-lg text-surface-400 transition-colors;
+}
+
+.nav-link:hover i {
+    @apply text-primary-600;
 }
 
 .active-link {
-    background-color: #1e293b;
-    color: white;
+    @apply bg-primary-50 text-primary-800 font-semibold shadow-sm ring-1 ring-primary-100;
 }
 
-.errorMessage {
-    color: #e24c4c;
-    font-size: 0.75rem;
+.active-link i {
+    @apply text-primary-600;
+}
+
+.layout-main {
+    @apply flex-1 overflow-y-auto bg-surface-50 relative;
+}
+
+.content-wrapper {
+    @apply p-6 max-w-7xl mx-auto;
+}
+
+.page-header {
+    @apply mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4;
+}
+
+.page-title {
+    @apply text-2xl font-bold text-surface-900 m-0;
+}
+
+.page-subtitle {
+    @apply text-sm text-surface-500 mt-1;
 }

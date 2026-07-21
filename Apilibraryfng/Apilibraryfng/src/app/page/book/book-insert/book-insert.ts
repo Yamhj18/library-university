@@ -96,7 +96,7 @@ export class BookInsert implements OnInit {
                         code:       this.codeFb.value,
                         title:      this.titleFb.value,
                         author:     this.authorFb.value,
-                        stock:      this.stockFb.value,
+                        stockTotal: this.stockFb.value,
                         image:      this.selectedImage ?? undefined
                     }
                 };

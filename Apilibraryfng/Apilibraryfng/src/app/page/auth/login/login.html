@@ -1,65 +1,76 @@
-<div class="login-wrapper">
-    <div class="login-card">
+<div class="min-h-screen flex items-center justify-center bg-surface-50 p-4 relative overflow-hidden">
+    <!-- Decoraciones de fondo -->
+    <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-200/40 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-200/40 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="login-header">
-            <i class="pi pi-book login-icon"></i>
-            <h1>UNAMBA Library</h1>
-            <p>Inicia sesión para continuar</p>
+    <div class="glass card w-full max-w-md p-8 relative z-10 animate-fade-in-up">
+        
+        <div class="flex flex-col items-center mb-8">
+            <div class="w-16 h-16 rounded-2xl bg-primary-800 text-white flex items-center justify-center shadow-lg mb-4">
+                <i class="pi pi-book text-3xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-surface-900 mb-1">UNAMBA Library</h1>
+            <p class="text-surface-500 text-sm">Inicia sesión para acceder a los recursos</p>
         </div>
 
-        <form [formGroup]="frmLogin">
-
-            <div class="flex flex-col gap-2 mb-4">
-                <label class="font-medium">Correo electrónico</label>
-                <input
-                    pInputText
-                    formControlName="email"
-                    placeholder="correo@unamba.edu.pe"
-                    class="w-full"
-                />
+        <form [formGroup]="frmLogin" class="flex flex-col gap-5">
+            
+            <div class="flex flex-col gap-1.5">
+                <label class="label-text">Correo electrónico institucional</label>
+                <span class="p-input-icon-left w-full">
+                    <i class="pi pi-envelope text-surface-400"></i>
+                    <input
+                        pInputText
+                        formControlName="email"
+                        placeholder="ejemplo@unamba.edu.pe"
+                        class="input-field pl-10"
+                    />
+                </span>
                 @if((emailFb.touched || emailFb.dirty) && emailFb.hasError('required')) {
-                    <small class="errorMessage">Campo requerido.</small>
+                    <small class="error-text"><i class="pi pi-info-circle"></i> Campo requerido.</small>
                 }
                 @if((emailFb.touched || emailFb.dirty) && emailFb.hasError('email')) {
-                    <small class="errorMessage">Correo no válido.</small>
+                    <small class="error-text"><i class="pi pi-info-circle"></i> Correo no válido.</small>
                 }
             </div>
 
-            <div class="flex flex-col gap-2 mb-4">
-                <label class="font-medium">Contraseña</label>
-                <p-password
-                    formControlName="password"
-                    placeholder="••••••••"
-                    [feedback]="false"
-                    [toggleMask]="true"
-                    class="w-full"
-                />
+            <div class="flex flex-col gap-1.5">
+                <label class="label-text">Contraseña (Tu DNI)</label>
+                <span class="p-input-icon-left w-full">
+                    <i class="pi pi-lock text-surface-400 z-10"></i>
+                    <p-password
+                        formControlName="password"
+                        placeholder="Ingresa tu DNI"
+                        [feedback]="false"
+                        [toggleMask]="true"
+                        styleClass="w-full"
+                        inputStyleClass="input-field pl-10 w-full"
+                    />
+                </span>
                 @if((passwordFb.touched || passwordFb.dirty) && passwordFb.hasError('required')) {
-                    <small class="errorMessage">Campo requerido.</small>
+                    <small class="error-text"><i class="pi pi-info-circle"></i> Campo requerido.</small>
                 }
             </div>
 
             @if(errorMessage) {
-                <div class="error-alert mb-4">
-                    <i class="pi pi-exclamation-circle"></i>
+                <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-3 text-sm font-medium">
+                    <i class="pi pi-exclamation-triangle text-lg"></i>
                     <span>{{ errorMessage }}</span>
                 </div>
             }
 
-            <p-button
-                label="Iniciar sesión"
-                severity="primary"
-                class="w-full"
-                styleClass="w-full"
-                (click)="sendLogin()"
-            />
+            <button type="button" class="btn-primary w-full py-3 mt-2 text-base shadow-lg" (click)="sendLogin()">
+                <i class="pi pi-sign-in mr-2"></i> Iniciar sesión
+            </button>
 
         </form>
 
-        <div class="login-footer">
-            <span>¿No tienes cuenta?</span>
-            <a (click)="goToRegister()" class="register-link">Regístrate aquí</a>
+        <div class="mt-8 text-center text-sm text-surface-600">
+            <span>¿Eres estudiante y no tienes cuenta?</span><br/>
+            <a (click)="goToRegister()" class="text-primary-600 font-semibold cursor-pointer hover:text-primary-800 transition-colors inline-block mt-1">
+                Regístrate aquí
+            </a>
         </div>
-
+        
     </div>
 </div>

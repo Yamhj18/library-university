@@ -11,7 +11,7 @@ export interface ApibookInsert$Params {
         'code'?: string;
         'title'?: string;
         'author'?: string;
-        'stock'?: number;
+        'stockTotal'?: number;
         'image'?: Blob;
     }
 }

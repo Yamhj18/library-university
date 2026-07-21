@@ -1,87 +1,229 @@
-<div class="card bg-white shadow-sm rounded-lg w-full p-4">
-    <h2 class="text-xl font-bold mb-4">Registrar Préstamo</h2>
-    <form [formGroup]="frmLoanInsert">
-        <div class="grid grid-cols-1 gap-4 mb-3">
-            <div class="flex flex-col gap-2">
-                <label class="font-medium">Libro*</label>
-                <p-autoComplete formControlName="book" [suggestions]="listBookSuggestions" (completeMethod)="searchBook($event)" optionLabel="displayName" placeholder="Buscar por título, autor o código..." class="w-full" [forceSelection]="true"/>
-                @if((bookFb.touched || bookFb.dirty) && bookFb.hasError('required')) {
-                    <small class="errorMessage">Campo requerido.</small>
+<div class="page-header flex justify-between items-center mb-6">
+    <div>
+        <h1 class="page-title text-2xl font-bold text-primary-950">Registrar Préstamo Presencial</h1>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-emerald-200">
+            Administrador
+        </span>
+        <button class="w-9 h-9 rounded-full bg-white hover:bg-surface-100 flex items-center justify-center text-surface-600 border border-surface-200 shadow-sm relative transition-all">
+            <i class="pi pi-bell text-lg"></i>
+            <span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+        </button>
+    </div>
+</div>
+
+<form [formGroup]="frmLoanInsert" class="flex flex-col gap-6 w-full max-w-7xl mx-auto pb-10">
+    <!-- Split Row: Book Search & Student Search -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- CARD 1: Buscar Libro -->
+        <div class="card p-6 bg-white rounded-xl shadow-soft border border-surface-200/60 flex flex-col gap-5">
+            <div class="flex items-center gap-3 pb-3 border-b border-surface-100">
+                <div class="w-9 h-9 rounded-lg bg-primary-50 text-primary-700 flex items-center justify-center">
+                    <i class="pi pi-book text-lg"></i>
+                </div>
+                <h2 class="text-lg font-bold text-surface-900">Buscar Libro</h2>
+            </div>
+
+            <!-- Search Field -->
+            <div class="flex flex-col gap-1.5">
+                <label class="label-text text-sm font-semibold text-surface-700">Buscar por Código o Título</label>
+                <span class="p-input-icon-left w-full block relative">
+                    <i class="pi pi-search text-surface-400 absolute left-3 top-1/2 -translate-y-1/2 z-10"></i>
+                    <p-autoComplete 
+                        formControlName="searchBook" 
+                        [suggestions]="listBookSuggestions" 
+                        (completeMethod)="searchBook($event)" 
+                        (onSelect)="onBookSelect($event)"
+                        optionLabel="displayName" 
+                        placeholder="Escribe el título o código del libro..." 
+                        styleClass="w-full" 
+                        inputStyleClass="input-field pl-10 w-full"
+                        [forceSelection]="true"
+                        appendTo="body"
+                    />
+                </span>
+                @if(searchBookFb.touched && searchBookFb.hasError('required')) {
+                    <small class="error-text"><i class="pi pi-info-circle"></i> Seleccione un libro válido.</small>
                 }
             </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-            <div class="flex flex-col gap-2">
-                <label class="font-medium">Código de estudiante*</label>
-                <input pInputText formControlName="studentCode" placeholder="ej. 2022100123" class="w-full"/>
-                @if((studentCodeFb.touched || studentCodeFb.dirty) && studentCodeFb.hasError('required')) {
-                    <small class="errorMessage">Campo requerido.</small>
-                }
+
+            <!-- Book Title -->
+            <div class="flex flex-col gap-1.5">
+                <label class="label-text">Título del Libro</label>
+                <input pInputText formControlName="bookTitle" class="input-field bg-surface-50 cursor-not-allowed" placeholder="-" />
             </div>
-            <div class="flex flex-col gap-2">
-                <label class="font-medium">Nombre del estudiante*</label>
-                <input pInputText formControlName="studentName" placeholder="Nombre completo" class="w-full"/>
-                @if((studentNameFb.touched || studentNameFb.dirty) && studentNameFb.hasError('required')) {
-                    <small class="errorMessage">Campo requerido.</small>
-                }
-            </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-            <div class="flex flex-col gap-2">
-                <label class="font-medium">Facultad*</label>
-                <p-select
-                    [options]="listFaculty"
-                    formControlName="faculty"
-                    optionLabel="name"
-                    placeholder="Seleccione una facultad"
-                    class="w-full"
-                />
-                @if((facultyFb.touched || facultyFb.dirty) && facultyFb.hasError('required')) {
-                    <small class="errorMessage">Campo requerido.</small>
-                }
-            </div>
-            <div class="flex flex-col gap-2">
-                <label class="font-medium">Número de celular*</label>
-                <input pInputText formControlName="phoneNumber" placeholder="ej. 987654321" class="w-full"/>
-                @if((phoneNumberFb.touched || phoneNumberFb.dirty) && phoneNumberFb.hasError('required')) {
-                    <small class="errorMessage">Campo requerido.</small>
-                }
-            </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-            <div class="flex flex-col gap-2">
-                <label class="font-medium">Tipo de garantía*</label>
-                <div class="flex gap-4 mt-1">
-                    <div class="flex items-center gap-2">
-                        <p-radioButton name="guaranteeType" value="DNI" formControlName="guaranteeType" inputId="rdDni"/>
-                        <label for="rdDni">DNI</label>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <p-radioButton name="guaranteeType" value="Carnet" formControlName="guaranteeType" inputId="rdCarnet"/>
-                        <label for="rdCarnet">Carnet</label>
-                    </div>
+
+            <!-- Code & Author -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Código del Libro</label>
+                    <input pInputText formControlName="bookCode" class="input-field bg-surface-50 cursor-not-allowed" placeholder="-" />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Autor</label>
+                    <input pInputText formControlName="bookAuthor" class="input-field bg-surface-50 cursor-not-allowed" placeholder="-" />
                 </div>
             </div>
-            <div class="flex flex-col gap-2">
-                <label class="font-medium">Número de garantía*</label>
-                <input pInputText formControlName="guaranteeNumber" placeholder="Número de identificación" class="w-full"/>
-                @if((guaranteeNumberFb.touched || guaranteeNumberFb.dirty) && guaranteeNumberFb.hasError('required')) {
-                    <small class="errorMessage">Campo requerido.</small>
+
+            <!-- Category & Quantity -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Categoría</label>
+                    <input pInputText formControlName="bookCategory" class="input-field bg-surface-50 cursor-not-allowed" placeholder="-" />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Cantidad a prestar</label>
+                    <p-inputnumber 
+                        formControlName="quantity" 
+                        [showButtons]="true" 
+                        buttonLayout="horizontal" 
+                        [min]="1" 
+                        styleClass="w-full" 
+                        inputStyleClass="input-field text-center w-full"
+                        decrementButtonClass="p-button-secondary"
+                        incrementButtonClass="p-button-secondary"
+                        incrementButtonIcon="pi pi-plus"
+                        decrementButtonIcon="pi pi-minus"
+                    />
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 2: Buscar Estudiante -->
+        <div class="card p-6 bg-white rounded-xl shadow-soft border border-surface-200/60 flex flex-col gap-5">
+            <div class="flex items-center gap-3 pb-3 border-b border-surface-100">
+                <div class="w-9 h-9 rounded-lg bg-primary-50 text-primary-700 flex items-center justify-center">
+                    <i class="pi pi-user text-lg"></i>
+                </div>
+                <h2 class="text-lg font-bold text-surface-900">Buscar Estudiante</h2>
+            </div>
+
+            <!-- Search Field -->
+            <div class="flex flex-col gap-1.5">
+                <label class="label-text text-sm font-semibold text-surface-700">Buscar por Código o Nombre</label>
+                <span class="p-input-icon-left w-full block relative">
+                    <i class="pi pi-search text-surface-400 absolute left-3 top-1/2 -translate-y-1/2 z-10"></i>
+                    <p-autoComplete 
+                        formControlName="searchStudent" 
+                        [suggestions]="listStudentSuggestions" 
+                        (completeMethod)="searchStudent($event)" 
+                        (onSelect)="onStudentSelect($event)"
+                        optionLabel="displayName" 
+                        placeholder="Escribe el nombre o código del estudiante..." 
+                        styleClass="w-full" 
+                        inputStyleClass="input-field pl-10 w-full"
+                        [forceSelection]="true"
+                        appendTo="body"
+                    />
+                </span>
+                @if(searchStudentFb.touched && searchStudentFb.hasError('required')) {
+                    <small class="error-text"><i class="pi pi-info-circle"></i> Seleccione un estudiante válido.</small>
+                }
+            </div>
+
+            <!-- Full Name -->
+            <div class="flex flex-col gap-1.5">
+                <label class="label-text">Nombre Completo</label>
+                <input pInputText formControlName="studentName" class="input-field bg-surface-50 cursor-not-allowed" placeholder="-" />
+            </div>
+
+            <!-- Code & DNI -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Código de Estudiante</label>
+                    <input pInputText formControlName="studentCode" class="input-field bg-surface-50 cursor-not-allowed" placeholder="-" />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">DNI</label>
+                    <input pInputText formControlName="studentDni" class="input-field bg-surface-50 cursor-not-allowed" placeholder="-" />
+                </div>
+            </div>
+
+            <!-- School -->
+            <div class="flex flex-col gap-1.5">
+                <label class="label-text">Escuela Profesional</label>
+                <input pInputText formControlName="studentSchool" class="input-field bg-surface-50 cursor-not-allowed" placeholder="-" />
+            </div>
+
+            <!-- Phone & Email -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Número de Celular</label>
+                    <input pInputText formControlName="studentPhone" class="input-field bg-surface-50 cursor-not-allowed" placeholder="-" />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Correo Institucional</label>
+                    <input pInputText formControlName="studentEmail" class="input-field bg-surface-50 cursor-not-allowed" placeholder="-" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD 3: Información Adicional -->
+    <div class="card p-6 bg-white rounded-xl shadow-soft border border-surface-200/60 flex flex-col gap-5">
+        <h2 class="text-lg font-bold text-surface-900 pb-3 border-b border-surface-100">Información Adicional del Préstamo</h2>
+
+        <!-- Guarantee Type -->
+        <div class="flex flex-col gap-1.5">
+            <label class="label-text">Tipo de Garantía</label>
+            <p-select 
+                [options]="listGuaranteeTypes" 
+                formControlName="guaranteeType" 
+                optionLabel="name" 
+                optionValue="value" 
+                placeholder="Seleccione el tipo de garantía" 
+                styleClass="w-full"
+                appendTo="body"
+                (onChange)="onGuaranteeTypeChange()"
+            />
+        </div>
+
+        <!-- Loan Date & Estimated Return Date -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col gap-1.5">
+                <label class="label-text">Fecha de Préstamo</label>
+                <!-- Shows today's date formatted to client -->
+                <input pInputText [value]="minDate | date:'dd/MM/yyyy'" class="input-field bg-surface-50 cursor-not-allowed" readonly />
+            </div>
+            <div class="flex flex-col gap-1.5">
+                <label class="label-text">Fecha Estimada de Devolución</label>
+                <p-datepicker 
+                    formControlName="estimatedReturnDate" 
+                    [showIcon]="true" 
+                    dateFormat="dd/mm/yy" 
+                    [minDate]="minDate" 
+                    placeholder="Seleccione la fecha límite" 
+                    styleClass="w-full"
+                    inputStyleClass="input-field w-full"
+                    appendTo="body"
+                />
+                @if(estimatedReturnDateFb.touched && estimatedReturnDateFb.hasError('required')) {
+                    <small class="error-text"><i class="pi pi-info-circle"></i> Debes especificar una fecha de devolución.</small>
                 }
             </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-            <div class="flex flex-col gap-2">
-                <label class="font-medium">Fecha estimada de devolución*</label>
-                <p-datepicker formControlName="estimatedReturnDate" [showIcon]="true" dateFormat="dd/mm/yy" [minDate]="minDate" placeholder="Seleccione una fecha" class="w-full"/>
-                @if((estimatedReturnDateFb.touched || estimatedReturnDateFb.dirty) && estimatedReturnDateFb.hasError('required')) {
-                    <small class="errorMessage">Campo requerido.</small>
-                }
-            </div>
+
+        <!-- Observations -->
+        <div class="flex flex-col gap-1.5">
+            <label class="label-text">Observaciones</label>
+            <textarea 
+                pInputTextarea 
+                formControlName="observations"
+                placeholder="Notas sobre el estado del libro u otros detalles relevantes..." 
+                class="input-field min-h-[100px] w-full"
+            ></textarea>
         </div>
-        <hr>
-        <div class="flex justify-end mt-3">
-            <p-button label="Registrar préstamo" severity="info" (click)="sendInsert($event)"/>
+
+        <!-- Submit Row -->
+        <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-surface-100">
+            <button type="button" class="btn-outline px-6 py-2" (click)="clearFields()">
+                Limpiar Campos
+            </button>
+            <button type="button" class="btn-primary px-8 py-2" (click)="sendInsert($event)">
+                <i class="pi pi-send mr-2"></i> Registrar Préstamo
+            </button>
         </div>
-    </form>
-</div>
+    </div>
+</form>

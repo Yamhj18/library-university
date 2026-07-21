@@ -1,2 +1,121 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+
+@theme {
+  /* Institutional Palette UNAMBA */
+  --color-primary-50: #eff6ff;
+  --color-primary-100: #dbeafe;
+  --color-primary-200: #bfdbfe;
+  --color-primary-300: #93c5fd;
+  --color-primary-400: #60a5fa;
+  --color-primary-500: #3b82f6;
+  --color-primary-600: #2563eb;
+  --color-primary-700: #1d4ed8;
+  --color-primary-800: #1e40af;
+  --color-primary-900: #1e3a8a; /* Institutional Blue */
+
+  --color-accent-50: #ecfdf5;
+  --color-accent-100: #d1fae5;
+  --color-accent-200: #a7f3d0;
+  --color-accent-300: #6ee7b7;
+  --color-accent-400: #34d399;
+  --color-accent-500: #10b981; /* Institutional Green */
+  --color-accent-600: #059669;
+  --color-accent-700: #047857;
+  --color-accent-800: #065f46;
+  --color-accent-900: #064e3b;
+
+  --color-surface-50: #f8fafc;
+  --color-surface-100: #f1f5f9;
+  --color-surface-200: #e2e8f0;
+  --color-surface-300: #cbd5e1;
+  --color-surface-400: #94a3b8;
+  --color-surface-500: #64748b;
+  --color-surface-600: #475569;
+  --color-surface-700: #334155;
+  --color-surface-800: #1e293b;
+  --color-surface-900: #0f172a;
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Outfit', system-ui, sans-serif;
+  
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  
+  --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.08);
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-surface-50 text-surface-900 antialiased overflow-x-hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold tracking-tight;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md border border-white/20;
+  }
+  
+  .card {
+    @apply bg-white rounded-xl shadow-soft border border-surface-200/60 overflow-hidden transition-all duration-300;
+  }
+  
+  .card-hover {
+    @apply hover:shadow-card hover:-translate-y-1;
+  }
+  
+  .btn-primary {
+    @apply bg-primary-800 text-white font-medium px-4 py-2 rounded-lg shadow-md hover:bg-primary-900 hover:shadow-lg transition-all active:scale-95;
+  }
+  
+  .btn-accent {
+    @apply bg-accent-600 text-white font-medium px-4 py-2 rounded-lg shadow-md hover:bg-accent-700 hover:shadow-lg transition-all active:scale-95;
+  }
+  
+  .btn-outline {
+    @apply bg-transparent border-2 border-primary-800 text-primary-800 font-medium px-4 py-2 rounded-lg hover:bg-primary-50 transition-all active:scale-95;
+  }
+
+  .input-field {
+    @apply w-full rounded-lg border border-surface-200 bg-white px-4 py-2.5 text-sm transition-all focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none;
+  }
+  
+  .label-text {
+    @apply block text-sm font-medium text-surface-700 mb-1.5;
+  }
+  
+  .error-text {
+    @apply text-xs text-red-500 mt-1 flex items-center gap-1;
+  }
+
+  .badge-active {
+    @apply bg-accent-100 text-accent-700 px-2.5 py-1 rounded-full text-xs font-medium border border-accent-200;
+  }
+  
+  .badge-inactive {
+    @apply bg-red-100 text-red-700 px-2.5 py-1 rounded-full text-xs font-medium border border-red-200;
+  }
+  
+  .badge-warning {
+    @apply bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full text-xs font-medium border border-amber-200;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-surface-200 rounded-full hover:bg-surface-300;
+}

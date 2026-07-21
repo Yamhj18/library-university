@@ -1,98 +1,602 @@
-.catalog-container {
-    padding: 1rem;
-}
+@reference "../../../styles.css";
 
-.catalog-header {
-    border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 1rem;
-}
-
-.books-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1.5rem;
-}
-
-.book-card {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
-    cursor: pointer;
-}
-
-.book-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-}
-
-.book-image-container {
+/* ==========================================================================
+   PAGE HEADER BANNER & STATS
+   ========================================================================== */
+.page-header-banner {
     position: relative;
-    height: 220px;
+    background: linear-gradient(135deg, var(--color-primary-900, #1e3a8a), var(--color-primary-700, #1d4ed8));
+    border-radius: 20px;
+    padding: 2.25rem 2rem;
+    margin-bottom: 2rem;
     overflow: hidden;
-    background: #f1f5f9;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.2);
 }
 
-.book-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+@media (min-width: 768px) {
+    .page-header-banner {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 2.5rem;
+    }
 }
 
-.book-status {
+/* Background circles */
+.banner-bg-circle {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+    pointer-events: none;
+    z-index: 1;
 }
 
-.book-info {
-    padding: 0.75rem;
+.bg-circle-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    right: -50px;
 }
 
-.book-category {
+.bg-circle-2 {
+    width: 250px;
+    height: 250px;
+    bottom: -120px;
+    left: 20%;
+}
+
+.banner-content {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+}
+
+.banner-tag {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-primary-100, #dbeafe);
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.banner-title {
+    font-family: 'Outfit', sans-serif;
+    color: white;
+    font-size: 2.25rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+}
+
+.banner-subtitle {
+    color: var(--color-primary-200, #bfdbfe);
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Stats */
+.banner-stats {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.stat-glass-card {
+    flex: 1;
+    min-width: 140px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 0.85rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.stat-glass-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.stat-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.stat-label {
+    color: var(--color-primary-200, #bfdbfe);
     font-size: 0.7rem;
-    color: #64748b;
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 0.25rem;
 }
 
-.book-title {
-    font-size: 0.95rem;
+
+/* ==========================================================================
+   PREMIUM BOOK CARD
+   ========================================================================== */
+.book-card-premium {
+    background: white;
+    border-radius: 20px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    box-shadow: var(--shadow-soft, 0 4px 20px -2px rgba(0, 0, 0, 0.05));
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.book-card-premium:hover {
+    transform: translateY(-8px);
+    border-color: rgba(30, 58, 138, 0.15);
+    box-shadow: var(--shadow-card, 0 10px 30px -5px rgba(0, 0, 0, 0.08));
+}
+
+/* Card Banner representing Category */
+.card-banner {
+    position: relative;
+    height: 90px;
+    width: 100%;
+}
+
+/* Glass Badge inside Banner */
+.category-badge-glass {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.65rem;
     font-weight: 600;
-    color: #1e293b;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Premium Card Banner Color Gradients */
+.card-banner-color-0 { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+.card-banner-color-1 { background: linear-gradient(135deg, #0f766e, #14b8a6); }
+.card-banner-color-2 { background: linear-gradient(135deg, #065f46, #10b981); }
+.card-banner-color-3 { background: linear-gradient(135deg, #5b21b6, #8b5cf6); }
+.card-banner-color-4 { background: linear-gradient(135deg, #9a3412, #f97316); }
+.card-banner-color-5 { background: linear-gradient(135deg, #9f1239, #f43f5e); }
+.card-banner-color-6 { background: linear-gradient(135deg, #1e293b, #64748b); }
+
+
+/* ==========================================================================
+   OVERLAPPING BOOK COVER & FALLBACKS
+   ========================================================================== */
+.book-cover-container {
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 145px;
+    z-index: 10;
+}
+
+.book-cover-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18), 0 2px 4px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.book-card-premium:hover .book-cover-image {
+    transform: scale(1.05) translateY(-3px);
+}
+
+/* Beautiful Fallback Book Cover */
+.book-cover-fallback {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: 2px solid white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18), 0 2px 4px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px 10px;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.book-card-premium:hover .book-cover-fallback {
+    transform: scale(1.05) translateY(-3px);
+}
+
+.book-fallback-icon {
+    font-size: 1.5rem;
+    opacity: 0.9;
+    margin-bottom: 0.25rem;
+    align-self: center;
+}
+
+.book-fallback-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.fallback-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-transform: capitalize;
+}
+
+.fallback-author {
+    font-size: 0.55rem;
+    opacity: 0.85;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Real-looking Book Spine Gradient */
+.book-fallback-spine {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 7px;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.25) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0.1) 100%);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Fallback Cover Colors (designed to look premium) */
+.fallback-color-0 { background: linear-gradient(135deg, #1e3a8a, #2563eb); }
+.fallback-color-1 { background: linear-gradient(135deg, #0f766e, #0d9488); }
+.fallback-color-2 { background: linear-gradient(135deg, #065f46, #059669); }
+.fallback-color-3 { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
+.fallback-color-4 { background: linear-gradient(135deg, #9a3412, #ea580c); }
+.fallback-color-5 { background: linear-gradient(135deg, #9f1239, #e11d48); }
+.fallback-color-6 { background: linear-gradient(135deg, #1e293b, #475569); }
+
+
+/* ==========================================================================
+   CARD BODY DETAILS
+   ========================================================================== */
+.card-body-premium {
+    padding: 90px 1.25rem 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.book-title-premium {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-surface-900, #0f172a);
+    line-height: 1.35;
     margin-bottom: 0.25rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    height: 2.7rem; /* Fix height to keep cards aligned */
+    cursor: pointer;
+    transition: color 0.2s;
 }
 
-.book-author {
+.book-title-premium:hover {
+    color: var(--color-primary-700, #1d4ed8);
+}
+
+.book-author-premium {
     font-size: 0.8rem;
-    color: #64748b;
-    margin-bottom: 0.5rem;
+    color: var(--color-surface-500, #64748b);
+    margin-bottom: 1.15rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.book-footer {
+/* Metadata Grid */
+.book-metadata-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-top: 1px solid var(--color-surface-100, #f1f5f9);
+    border-bottom: 1px solid var(--color-surface-100, #f1f5f9);
+    padding: 0.75rem 0;
+    margin-bottom: 1.15rem;
+}
+
+.metadata-col {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    font-size: 0.75rem;
-    color: #94a3b8;
-    border-top: 1px solid #f1f5f9;
-    padding-top: 0.5rem;
-    margin-top: 0.25rem;
+    justify-content: center;
 }
 
-.book-code {
+.meta-title {
+    font-size: 0.65rem;
     font-weight: 600;
-    color: #475569;
+    color: var(--color-surface-400, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.book-stock {
+.meta-val {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-surface-700, #475569);
+    margin-top: 2px;
+}
+
+/* Status Badges */
+.status-badge-container {
     display: flex;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+}
+
+.badge-premium-active {
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
+    background: #edfdf5; /* accent-50 */
+    border: 1px solid #a7f3d0; /* accent-200 */
+    color: #047857; /* accent-700 */
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.badge-premium-inactive {
+    display: inline-flex;
+    align-items: center;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    padding: 3px 10px;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+
+/* ==========================================================================
+   BUTTONS AND ACTIONS
+   ========================================================================== */
+.card-actions-premium {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.admin-buttons-row {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-premium-edit {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 1px solid var(--color-surface-200, #e2e8f0);
+    color: var(--color-surface-600, #475569);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.btn-premium-edit:hover {
+    background: var(--color-surface-50, #f8fafc);
+    border-color: var(--color-surface-300, #cbd5e1);
+    color: var(--color-surface-900, #0f172a);
+}
+
+.btn-premium-delete {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #ef4444; /* red-500 */
+    border: none;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-premium-delete:hover {
+    background: #dc2626; /* red-600 */
+}
+
+.btn-premium-loan {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary-900, #1e3a8a);
+    border: none;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(30, 58, 138, 0.1);
+}
+
+.btn-premium-loan:hover:not(:disabled) {
+    background: var(--color-primary-800, #1e40af);
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+}
+
+.btn-premium-loan:disabled {
+    background: var(--color-surface-200, #e2e8f0);
+    color: var(--color-surface-400, #94a3b8);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.btn-premium-view-details {
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-accent-600, #059669);
+    border: none;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-premium-view-details:hover {
+    background: var(--color-accent-700, #047857);
+}
+
+
+/* ==========================================================================
+   MODAL DIALOG DIAL-IN STYLING (MATCHING SCREENSHOTS)
+   ========================================================================== */
+.btn-dialog-cancel {
+    background: white;
+    border: 1px solid var(--color-surface-200, #e2e8f0);
+    color: var(--color-surface-600, #475569);
+    padding: 0.6rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-dialog-cancel:hover {
+    background: var(--color-surface-50, #f8fafc);
+    border-color: var(--color-surface-300, #cbd5e1);
+}
+
+.btn-dialog-save {
+    background: var(--color-primary-900, #1e3a8a);
+    border: none;
+    color: white;
+    padding: 0.6rem 1.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-dialog-save:hover {
+    background: var(--color-primary-800, #1e40af);
+}
+
+/* Overriding PrimeNG default dialog rules for premium aesthetics */
+::ng-deep .p-dialog {
+    border-radius: 20px !important;
+    border: none !important;
+    overflow: hidden !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+}
+
+::ng-deep .p-dialog-header {
+    background: #ffffff !important;
+    padding: 1.5rem 1.5rem 1rem 1.5rem !important;
+    border-bottom: 1px solid var(--color-surface-100, #f1f5f9) !important;
+}
+
+::ng-deep .p-dialog-title {
+    font-family: 'Outfit', sans-serif !important;
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+    color: var(--color-surface-900, #0f172a) !important;
+}
+
+::ng-deep .p-dialog-header-actions {
+    gap: 0.5rem !important;
+}
+
+::ng-deep .p-dialog-close-button {
+    width: 2rem !important;
+    height: 2rem !important;
+    border-radius: 50% !important;
+    transition: all 0.2s !important;
+}
+
+::ng-deep .p-dialog-close-button:hover {
+    background: var(--color-surface-100, #f1f5f9) !important;
+}
+
+::ng-deep .p-dialog-content {
+    background: #ffffff !important;
+    padding: 1.5rem !important;
 }

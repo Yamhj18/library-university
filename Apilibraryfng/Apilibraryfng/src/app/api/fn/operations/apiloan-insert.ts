@@ -8,13 +8,12 @@ import { RequestBuilder } from '../../request-builder';
 export interface ApiloanInsert$Params {
     body?: {
         'idBook'?: string;
-        'studentCode'?: string;
-        'studentName'?: string;
-        'faculty'?: string;
-        'phoneNumber'?: string;
+        'idUser'?: string;
+        'quantity'?: number;
         'guaranteeType'?: string;
         'guaranteeNumber'?: string;
         'estimatedReturnDate'?: string;
+        'observations'?: string;
     }
 }
 

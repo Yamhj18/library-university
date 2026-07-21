@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterModule, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
-import { AvatarModule } from 'primeng/avatar';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -18,7 +17,6 @@ import { AuthService } from './api/auth.service';
         RouterModule,
         ButtonModule,
         MenuModule,
-        AvatarModule,
         ToastModule,
         ConfirmDialogModule
     ],
@@ -34,14 +32,19 @@ export class App {
     });
 
     adminNavItems: MenuItem[] = [
-        { label: 'Catálogo',           icon: 'pi pi-book',   routerLink: '/catalog' },
-        { label: 'Registrar libro',    icon: 'pi pi-plus',   routerLink: '/book/insert' },
-        { label: 'Registrar préstamo', icon: 'pi pi-send',   routerLink: '/loan/insert' },
-        { label: 'Devoluciones',       icon: 'pi pi-replay', routerLink: '/loan/list' }
+        { label: 'Dashboard',          icon: 'pi pi-chart-pie', routerLink: '/dashboard' },
+        { label: 'Catálogo',           icon: 'pi pi-book',      routerLink: '/catalog' },
+        { label: 'Préstamos',          icon: 'pi pi-send',      routerLink: '/loan/list' },
+        { label: 'Estudiantes',        icon: 'pi pi-users',     routerLink: '/student/list' },
+        { label: 'Reglamento',         icon: 'pi pi-file',      routerLink: '/rules' },
+        { label: 'Configuración',      icon: 'pi pi-cog',       routerLink: '/settings' }
     ];
 
     studentNavItems: MenuItem[] = [
-        { label: 'Catálogo', icon: 'pi pi-book', routerLink: '/catalog' }
+        { label: 'Catálogo',           icon: 'pi pi-book',      routerLink: '/catalog' },
+        { label: 'Mis Préstamos',      icon: 'pi pi-clock',     routerLink: '/student/my-loans' },
+        { label: 'Mi Perfil',          icon: 'pi pi-user',      routerLink: '/student/profile' },
+        { label: 'Reglamento',         icon: 'pi pi-file',      routerLink: '/rules' }
     ];
 
     get navItems(): MenuItem[] {
@@ -50,7 +53,7 @@ export class App {
 
     get profileItems(): MenuItem[] {
         return [
-            { label: this.authService.userName(), icon: 'pi pi-user', disabled: true },
+            { label: 'Mi Perfil', icon: 'pi pi-user', routerLink: '/student/profile' },
             { separator: true },
             { label: 'Cerrar sesión', icon: 'pi pi-sign-out', command: () => this.logout() }
         ];

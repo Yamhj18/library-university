@@ -23,6 +23,7 @@
     "@primeuix/themes": "^2.0.3",
     "@tailwindcss/postcss": "^4.3.0",
     "@tailwindcss/vite": "^4.3.0",
+    "chart.js": "^4.5.1",
     "express": "^5.1.0",
     "postcss": "^8.5.15",
     "primeng": "^21.1.9",

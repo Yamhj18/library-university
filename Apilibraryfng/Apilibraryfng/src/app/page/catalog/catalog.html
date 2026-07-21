@@ -1,66 +1,302 @@
-<div class="catalog-container">
-
-    <!-- Header -->
-    <div class="catalog-header mb-6">
-        <h1 class="text-3xl font-bold text-slate-800">UNAMBA Libreria</h1>
-        <p class="text-slate-500 mt-1">Explorar libros disponibles</p>
+<div class="page-header-banner animate-fade-in">
+    <div class="banner-bg-circle bg-circle-1"></div>
+    <div class="banner-bg-circle bg-circle-2"></div>
+    
+    <div class="banner-content">
+        <span class="banner-tag"><i class="pi pi-bookmark-fill mr-1.5"></i> Biblioteca Central UNAMBA</span>
+        <h1 class="banner-title">Catálogo de Libros</h1>
+        <p class="banner-subtitle">Explora, busca y gestiona la colección completa de libros y recursos de nuestra universidad</p>
     </div>
+    
+    <div class="banner-stats">
+        <div class="stat-glass-card">
+            <div class="stat-icon-wrapper bg-blue-500/20 text-blue-200">
+                <i class="pi pi-book"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ listBook.length }}</span>
+                <span class="stat-label">Títulos</span>
+            </div>
+        </div>
+        <div class="stat-glass-card">
+            <div class="stat-icon-wrapper bg-emerald-500/20 text-emerald-200">
+                <i class="pi pi-check-circle"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ getAvailableCount() }}</span>
+                <span class="stat-label">Disponibles</span>
+            </div>
+        </div>
+        <div class="stat-glass-card">
+            <div class="stat-icon-wrapper bg-amber-500/20 text-amber-200">
+                <i class="pi pi-clock"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-value">{{ getLoanedCount() }}</span>
+                <span class="stat-label">En Préstamo</span>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <!-- Filters -->
-    <div class="flex flex-col md:flex-row gap-3 mb-6">
-        <div class="flex gap-2 flex-1">
-            <input
-                pInputText
-                [(ngModel)]="searchText"
-                placeholder="Buscar por título, autor o código..."
-                class="w-full"
-                (keyup.enter)="onSearch()"
+<!-- Search and Filter Bar -->
+<div class="card p-5 mb-6 animate-fade-in-up">
+    <div class="flex flex-col md:flex-row gap-4">
+        <!-- Text Search -->
+        <div class="flex-1 relative">
+            <span class="p-input-icon-left w-full block">
+                <i class="pi pi-search text-surface-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                <input
+                    pInputText
+                    [(ngModel)]="searchText"
+                    placeholder="Buscar por título, autor o código..."
+                    class="input-field pl-10 w-full"
+                    (keyup.enter)="onSearch()"
+                />
+            </span>
+        </div>
+        
+        <!-- Category Filter -->
+        <div class="w-full md:w-64">
+            <p-select
+                [options]="listCategory"
+                [(ngModel)]="selectedCategory"
+                optionLabel="name"
+                placeholder="Todas las categorías"
+                styleClass="w-full"
+                appendTo="body"
+                (onChange)="onCategoryChange()"
             />
-            <p-button icon="pi pi-search" (click)="onSearch()" />
         </div>
-        <p-select
-            [options]="listCategory"
-            [(ngModel)]="selectedCategory"
-            optionLabel="name"
-            placeholder="Todas las categorías"
-            class="w-full md:w-64"
-            (onChange)="onCategoryChange()"
-        />
-    </div>
 
-    <!-- Books Grid -->
-    @if(listBook.length === 0) {
-        <div class="flex flex-col items-center justify-center py-20 text-slate-400">
-            <i class="pi pi-book text-6xl mb-4"></i>
-            <p class="text-xl">Todas las categorías</p>
+        <!-- Availability Filter -->
+        <div class="w-full md:w-64">
+            <p-select
+                [options]="listAvailability"
+                [(ngModel)]="selectedAvailability"
+                optionLabel="name"
+                placeholder="Cualquier Disponibilidad"
+                styleClass="w-full"
+                appendTo="body"
+                (onChange)="onAvailabilityChange()"
+            />
         </div>
-    } @else {
-        <div class="books-grid">
-            @for(book of listBook; track book.idBook) {
-                <div class="book-card">
-                    <div class="book-image-container">
-                        <img [src]="getImageUrl(book)" [alt]="book.title" class="book-image"/>
-                        <div class="book-status">
-                            <p-tag
-                                [value]="book.status === 'Available' ? 'Disponible' : 'No disponible'"
-                                [severity]="getStatusSeverity(book.status)"
-                            />
+        
+        <button class="btn-primary flex items-center justify-center whitespace-nowrap" (click)="onSearch()">
+            <i class="pi pi-search mr-2"></i> Buscar
+        </button>
+        
+        @if(auth.isAdmin()) {
+            <button class="btn-accent flex items-center justify-center whitespace-nowrap" (click)="navigateToAddBook()">
+                <i class="pi pi-plus mr-2"></i> Registrar Libro
+            </button>
+        }
+    </div>
+</div>
+
+<!-- Books Grid -->
+@if(filteredBooks.length === 0) {
+    <div class="card flex flex-col items-center justify-center py-20 text-surface-400 animate-fade-in">
+        <i class="pi pi-book text-6xl mb-4 text-surface-300"></i>
+        <p class="text-xl font-medium text-surface-500">No se encontraron libros</p>
+        <p class="text-sm mt-1">Intenta con otros términos de búsqueda o filtros</p>
+    </div>
+} @else {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in-up">
+        @for(book of filteredBooks; track book.idBook) {
+            <div class="book-card-premium group">
+                <!-- Colored banner representing the category -->
+                <div [class]="'card-banner card-banner-color-' + ($index % 7)">
+                    <span class="category-badge-glass">
+                        {{ book.categoryName }}
+                    </span>
+                </div>
+
+                <!-- Overlapping Book Cover container -->
+                <div class="book-cover-container">
+                    @if(book.imageUrl) {
+                        <img [src]="getImageUrl(book)" [alt]="book.title" class="book-cover-image" />
+                    } @else {
+                        <!-- Fallback styled CSS book representation -->
+                        <div [class]="'book-cover-fallback fallback-color-' + ($index % 7)">
+                            <i class="pi pi-book book-fallback-icon"></i>
+                            <div class="book-fallback-details">
+                                <p class="fallback-title" [title]="book.title">{{ book.title }}</p>
+                                <p class="fallback-author" [title]="book.author">{{ book.author }}</p>
+                            </div>
+                            <div class="book-fallback-spine"></div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Card Body details (padded down for overlapping cover) -->
+                <div class="card-body-premium">
+                    <h3 class="book-title-premium" [title]="book.title" (click)="openEditDialog(book, $event)">
+                        {{ book.title }}
+                    </h3>
+                    <p class="book-author-premium">
+                        Por <span class="font-medium text-surface-700">{{ book.author }}</span>
+                    </p>
+                    
+                    <div class="book-metadata-grid">
+                        <div class="metadata-col">
+                            <span class="meta-title">Código</span>
+                            <span class="meta-val font-mono">{{ book.code }}</span>
+                        </div>
+                        <div class="metadata-col border-x border-surface-100">
+                            <span class="meta-title">Ejemplares</span>
+                            <span class="meta-val font-semibold text-primary-900">{{ book.stockAvailable }}/{{ book.stockTotal }}</span>
+                        </div>
+                        <div class="metadata-col">
+                            <span class="meta-title">Año</span>
+                            <span class="meta-val">{{ book.publicationYear || 'N/A' }}</span>
                         </div>
                     </div>
-                    <div class="book-info">
-                        <p class="book-category">{{ book.categoryName }}</p>
-                        <h3 class="book-title">{{ book.title }}</h3>
-                        <p class="book-author">{{ book.author }}</p>
-                        <div class="book-footer">
-                            <span class="book-code">{{ book.code }}</span>
-                            <span class="book-stock">
-                                <i class="pi pi-clone"></i> {{ book.stock }} disponibles
-                            </span>
-                        </div>
+
+                    <div class="status-badge-container">
+                        <span [class]="book.status === 'Available' ? 'badge-premium-active' : 'badge-premium-inactive'">
+                            <i [class]="book.status === 'Available' ? 'pi pi-check-circle mr-1' : 'pi pi-times-circle mr-1'"></i>
+                            {{ book.status === 'Available' ? 'Disponible' : 'No disponible' }}
+                        </span>
+                    </div>
+
+                    <!-- Administrator / Librarian Actions -->
+                    <div class="card-actions-premium">
+                        @if(auth.isAdmin()) {
+                            <div class="admin-buttons-row">
+                                <button type="button" class="btn-premium-edit" (click)="openEditDialog(book, $event)">
+                                    <i class="pi pi-pencil mr-1.5"></i> Editar
+                                </button>
+                                <button type="button" class="btn-premium-delete" (click)="deleteBook(book, $event)">
+                                    <i class="pi pi-trash mr-1.5"></i> Eliminar
+                                </button>
+                            </div>
+                            <button 
+                                type="button" 
+                                class="btn-premium-loan" 
+                                [disabled]="book.status !== 'Available'"
+                                (click)="registerLoan(book)"
+                            >
+                                <i class="pi pi-send mr-1.5"></i> Registrar Préstamo
+                            </button>
+                        } @else {
+                            <button type="button" class="btn-premium-view-details" (click)="openEditDialog(book, $event)">
+                                <i class="pi pi-eye mr-1.5"></i> Ver Detalles
+                            </button>
+                        }
                     </div>
                 </div>
-            }
+
+            </div>
+        }
+    </div>
+}
+
+<!-- Book Edit Modal Dialog -->
+<p-dialog 
+    [(visible)]="displayEditDialog" 
+    [modal]="true" 
+    header="Editar Detalles del Libro" 
+    [style]="{ width: '45rem' }"
+    [draggable]="false"
+    [resizable]="false"
+    styleClass="p-fluid"
+>
+    @if(editingBook) {
+        <div class="flex flex-col gap-5 pt-4">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Title -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Título del Libro*</label>
+                    <input pInputText [(ngModel)]="editFormBook.title" placeholder="Ingrese el título" class="input-field"/>
+                </div>
+                
+                <!-- Author -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Autor*</label>
+                    <input pInputText [(ngModel)]="editFormBook.author" placeholder="Ingrese el autor" class="input-field"/>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Category -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Categoría*</label>
+                    <p-select 
+                        [options]="listCategoryForEdit" 
+                        [(ngModel)]="selectedEditCategory" 
+                        optionLabel="name"
+                        placeholder="Seleccione categoría"
+                        styleClass="w-full"
+                        appendTo="body"
+                    />
+                </div>
+                
+                <!-- Code -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Código*</label>
+                    <input pInputText [(ngModel)]="editFormBook.code" placeholder="ej. LIB-101" class="input-field"/>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Stock Total -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Stock Total*</label>
+                    <p-inputnumber [(ngModel)]="editFormBook.stockTotal" [min]="1" placeholder="Ej. 5" styleClass="w-full" inputStyleClass="w-full"/>
+                </div>
+                
+                <!-- Publication Year -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="label-text">Año de Publicación</label>
+                    <p-inputnumber [(ngModel)]="editFormBook.publicationYear" [useGrouping]="false" placeholder="Ej. 2018" styleClass="w-full" inputStyleClass="w-full"/>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="flex flex-col gap-1.5">
+                <label class="label-text">Descripción o Sinopsis</label>
+                <textarea 
+                    pInputTextarea 
+                    [(ngModel)]="editFormBook.description" 
+                    placeholder="Breve descripción del libro..." 
+                    class="input-field min-h-[80px]"
+                ></textarea>
+            </div>
+
+            <!-- Image Upload and Preview -->
+            <div class="flex flex-col gap-1.5">
+                <label class="label-text">Portada del Libro</label>
+                <div class="edit-image-preview-container">
+                    @if(imageEditPreview || editingBook.imageUrl) {
+                        <img [src]="imageEditPreview || getImageUrl(editingBook)" alt="Vista previa" class="edit-image-preview"/>
+                    }
+                    <div class="flex-1 flex flex-col gap-2">
+                        <p-fileUpload 
+                            mode="basic" 
+                            chooseLabel="Subir Portada" 
+                            accept="image/*" 
+                            [maxFileSize]="5000000" 
+                            chooseIcon="pi pi-upload"
+                            styleClass="p-button-outlined justify-center"
+                            (onSelect)="onEditImageSelect($event)"
+                        />
+                        <span class="text-xs text-surface-400">Archivos permitidos: JPG, PNG, WEBP. Max. 5MB.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dialog Action Buttons -->
+            <div class="flex justify-end gap-3 mt-4 pt-3 border-t border-surface-100">
+                <button type="button" class="btn-dialog-cancel" (click)="displayEditDialog = false">
+                    Cancelar
+                </button>
+                <button type="button" class="btn-dialog-save" (click)="saveBookUpdate()">
+                    <i class="pi pi-save mr-1.5"></i> Guardar Cambios
+                </button>
+            </div>
+
         </div>
     }
-
-</div>
+</p-dialog>
