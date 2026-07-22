@@ -58,6 +58,7 @@ export class Catalog implements OnInit {
 
     // Book Edit Dialog State
     displayEditDialog: boolean = false;
+    isReadOnly: boolean = false;
     editingBook: any = null;
     editFormBook: any = {};
     selectedEditCategory: any = null;
@@ -160,9 +161,10 @@ export class Catalog implements OnInit {
         });
     }
 
-    // Edit book actions
+    // Edit / View book actions
     openEditDialog(book: any, event: Event): void {
         event.stopPropagation();
+        this.isReadOnly = !this.auth.isAdmin();
         this.editingBook = book;
         this.editFormBook = {
             title: book.title,

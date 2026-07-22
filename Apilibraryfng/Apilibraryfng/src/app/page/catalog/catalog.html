@@ -197,11 +197,11 @@
     </div>
 }
 
-<!-- Book Edit Modal Dialog -->
+<!-- Book Edit / Details Modal Dialog -->
 <p-dialog 
     [(visible)]="displayEditDialog" 
     [modal]="true" 
-    header="Editar Detalles del Libro" 
+    [header]="auth.isAdmin() ? 'Editar Detalles del Libro' : 'Detalles del Libro'" 
     [style]="{ width: '45rem' }"
     [draggable]="false"
     [resizable]="false"
@@ -214,13 +214,13 @@
                 <!-- Title -->
                 <div class="flex flex-col gap-1.5">
                     <label class="label-text">Título del Libro*</label>
-                    <input pInputText [(ngModel)]="editFormBook.title" placeholder="Ingrese el título" class="input-field"/>
+                    <input pInputText [(ngModel)]="editFormBook.title" [disabled]="isReadOnly" placeholder="Ingrese el título" class="input-field"/>
                 </div>
                 
                 <!-- Author -->
                 <div class="flex flex-col gap-1.5">
                     <label class="label-text">Autor*</label>
-                    <input pInputText [(ngModel)]="editFormBook.author" placeholder="Ingrese el autor" class="input-field"/>
+                    <input pInputText [(ngModel)]="editFormBook.author" [disabled]="isReadOnly" placeholder="Ingrese el autor" class="input-field"/>
                 </div>
             </div>
 
@@ -232,6 +232,7 @@
                         [options]="listCategoryForEdit" 
                         [(ngModel)]="selectedEditCategory" 
                         optionLabel="name"
+                        [disabled]="isReadOnly"
                         placeholder="Seleccione categoría"
                         styleClass="w-full"
                         appendTo="body"
@@ -241,7 +242,7 @@
                 <!-- Code -->
                 <div class="flex flex-col gap-1.5">
                     <label class="label-text">Código*</label>
-                    <input pInputText [(ngModel)]="editFormBook.code" placeholder="ej. LIB-101" class="input-field"/>
+                    <input pInputText [(ngModel)]="editFormBook.code" [disabled]="isReadOnly" placeholder="ej. LIB-101" class="input-field"/>
                 </div>
             </div>
 
@@ -249,13 +250,13 @@
                 <!-- Stock Total -->
                 <div class="flex flex-col gap-1.5">
                     <label class="label-text">Stock Total*</label>
-                    <p-inputnumber [(ngModel)]="editFormBook.stockTotal" [min]="1" placeholder="Ej. 5" styleClass="w-full" inputStyleClass="w-full"/>
+                    <p-inputnumber [(ngModel)]="editFormBook.stockTotal" [disabled]="isReadOnly" [min]="1" placeholder="Ej. 5" styleClass="w-full" inputStyleClass="w-full"/>
                 </div>
                 
                 <!-- Publication Year -->
                 <div class="flex flex-col gap-1.5">
                     <label class="label-text">Año de Publicación</label>
-                    <p-inputnumber [(ngModel)]="editFormBook.publicationYear" [useGrouping]="false" placeholder="Ej. 2018" styleClass="w-full" inputStyleClass="w-full"/>
+                    <p-inputnumber [(ngModel)]="editFormBook.publicationYear" [disabled]="isReadOnly" [useGrouping]="false" placeholder="Ej. 2018" styleClass="w-full" inputStyleClass="w-full"/>
                 </div>
             </div>
 
@@ -265,6 +266,7 @@
                 <textarea 
                     pInputTextarea 
                     [(ngModel)]="editFormBook.description" 
+                    [disabled]="isReadOnly"
                     placeholder="Breve descripción del libro..." 
                     class="input-field min-h-[80px]"
                 ></textarea>
@@ -277,29 +279,33 @@
                     @if(imageEditPreview || editingBook.imageUrl) {
                         <img [src]="imageEditPreview || getImageUrl(editingBook)" alt="Vista previa" class="edit-image-preview"/>
                     }
-                    <div class="flex-1 flex flex-col gap-2">
-                        <p-fileUpload 
-                            mode="basic" 
-                            chooseLabel="Subir Portada" 
-                            accept="image/*" 
-                            [maxFileSize]="5000000" 
-                            chooseIcon="pi pi-upload"
-                            styleClass="p-button-outlined justify-center"
-                            (onSelect)="onEditImageSelect($event)"
-                        />
-                        <span class="text-xs text-surface-400">Archivos permitidos: JPG, PNG, WEBP. Max. 5MB.</span>
-                    </div>
+                    @if(auth.isAdmin()) {
+                        <div class="flex-1 flex flex-col gap-2">
+                            <p-fileUpload 
+                                mode="basic" 
+                                chooseLabel="Subir Portada" 
+                                accept="image/*" 
+                                [maxFileSize]="5000000" 
+                                chooseIcon="pi pi-upload"
+                                styleClass="p-button-outlined justify-center"
+                                (onSelect)="onEditImageSelect($event)"
+                            />
+                            <span class="text-xs text-surface-400">Archivos permitidos: JPG, PNG, WEBP. Max. 5MB.</span>
+                        </div>
+                    }
                 </div>
             </div>
 
             <!-- Dialog Action Buttons -->
             <div class="flex justify-end gap-3 mt-4 pt-3 border-t border-surface-100">
                 <button type="button" class="btn-dialog-cancel" (click)="displayEditDialog = false">
-                    Cancelar
+                    {{ auth.isAdmin() ? 'Cancelar' : 'Cerrar' }}
                 </button>
-                <button type="button" class="btn-dialog-save" (click)="saveBookUpdate()">
-                    <i class="pi pi-save mr-1.5"></i> Guardar Cambios
-                </button>
+                @if(auth.isAdmin()) {
+                    <button type="button" class="btn-dialog-save" (click)="saveBookUpdate()">
+                        <i class="pi pi-save mr-1.5"></i> Guardar Cambios
+                    </button>
+                }
             </div>
 
         </div>
