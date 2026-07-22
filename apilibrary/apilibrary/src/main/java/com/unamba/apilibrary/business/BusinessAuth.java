@@ -35,24 +35,19 @@ public class BusinessAuth {
     public ResponseAuthLogin login(RequestAuthLogin request) {
         ResponseAuthLogin response = new ResponseAuthLogin();
 
-        System.out.println("=== LOGIN DEBUG ===");
-        System.out.println("Email recibido: " + request.getEmail());
-
+        // Buscar por email
         EntityUser user = repositoryUser.findByEmail(request.getEmail()).orElse(null);
 
-        System.out.println("Usuario encontrado: " + (user != null ? user.getEmail() : "NULL"));
-
         if (user == null) {
-            response.listMessage.add("Correo o contraseña incorrectos.");
+            response.listMessage.add("Correo o DNI incorrectos.");
             return response;
         }
 
-        System.out.println("Password BD (inicio): " + user.getPassword().substring(0, 10));
+        // Validar DNI como contraseña (comparar con hash almacenado)
         boolean matches = passwordEncoder.matches(request.getPassword(), user.getPassword());
-        System.out.println("Password coincide: " + matches);
 
         if (!matches) {
-            response.listMessage.add("Correo o contraseña incorrectos.");
+            response.listMessage.add("Correo o DNI incorrectos.");
             return response;
         }
 
@@ -82,11 +77,26 @@ public class BusinessAuth {
             return response;
         }
 
+        if (repositoryUser.existsByDni(request.getDni())) {
+            response.listMessage.add("El DNI ya está registrado.");
+            return response;
+        }
+
+        if (repositoryUser.existsByStudentCode(request.getStudentCode())) {
+            response.listMessage.add("El código de estudiante ya está registrado.");
+            return response;
+        }
+
         EntityUser user = new EntityUser();
         user.setIdUser(UUID.randomUUID().toString());
         user.setFullName(request.getFullName());
+        user.setDni(request.getDni());
+        user.setStudentCode(request.getStudentCode());
+        user.setIdSchool(request.getIdSchool());
         user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setPhoneNumber(request.getPhoneNumber());
+        // El DNI se usa como contraseña, hasheado con BCrypt
+        user.setPassword(passwordEncoder.encode(request.getDni()));
         user.setRole(EnumUserRole.STUDENT.toString());
         user.setStatus(EnumUserStatus.ACTIVE.toString());
         user.setCreatedAt(new Date());
@@ -95,7 +105,7 @@ public class BusinessAuth {
         repositoryUser.save(user);
 
         response.success();
-        response.listMessage.add("Cuenta creada exitosamente.");
+        response.listMessage.add("Cuenta creada exitosamente. Use su correo y DNI para iniciar sesión.");
         return response;
     }
 }

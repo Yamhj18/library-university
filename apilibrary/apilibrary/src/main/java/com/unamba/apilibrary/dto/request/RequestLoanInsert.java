@@ -1,33 +1,33 @@
 package com.unamba.apilibrary.dto.request;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class RequestLoanInsert {
-    @NotBlank(message = "The field \"idBook\" is required.")
+    
+    @NotBlank(message = "El libro es obligatorio.")
     private String idBook;
 
-    @NotBlank(message = "The field \"studentCode\" is required.")
-    private String studentCode;
+    @NotBlank(message = "El estudiante es obligatorio.")
+    private String idUser;
+    
+    @NotNull(message = "La cantidad es obligatoria.")
+    @Min(value = 1, message = "Debe prestar al menos 1 ejemplar.")
+    private Integer quantity;
 
-    @NotBlank(message = "The field \"studentName\" is required.")
-    private String studentName;
-
-    @NotBlank(message = "The field \"faculty\" is required.")
-    private String faculty;
-
-    @NotBlank(message = "The field \"phoneNumber\" is required.")
-    private String phoneNumber;
-
-    @NotBlank(message = "The field \"guaranteeType\" is required.")
+    @NotBlank(message = "El tipo de garantía es obligatorio.")
     private String guaranteeType;
 
-    @NotBlank(message = "The field \"guaranteeNumber\" is required.")
+    @NotBlank(message = "El número de garantía es obligatorio.")
     private String guaranteeNumber;
 
-    @NotBlank(message = "The field \"estimatedReturnDate\" is required.")
+    @NotBlank(message = "La fecha estimada de devolución es obligatoria.")
     private String estimatedReturnDate;
+    
+    private String observations;
 }

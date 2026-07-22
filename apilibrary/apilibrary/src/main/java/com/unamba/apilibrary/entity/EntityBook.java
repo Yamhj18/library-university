@@ -20,11 +20,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EntityBook {
+
     @Id
-    @Column(name = "idBook")
+    @Column(name = "id_book")
     private String idBook;
 
-    @Column(name = "idCategory")
+    @Column(name = "id_category")
     private String idCategory;
 
     @Column(name = "code")
@@ -36,28 +37,37 @@ public class EntityBook {
     @Column(name = "author")
     private String author;
 
-    @Column(name = "stock")
-    private Integer stock;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "imageName")
+    @Column(name = "publication_year")
+    private Integer publicationYear;
+
+    @Column(name = "stock_total")
+    private Integer stockTotal;
+
+    @Column(name = "stock_available")
+    private Integer stockAvailable;
+
+    @Column(name = "image_name")
     private String imageName;
 
-    @Column(name = "imageExtension")
+    @Column(name = "image_extension")
     private String imageExtension;
 
     @Column(name = "status")
     private String status;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private Date createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idCategory", insertable = false, updatable = false)
+    @JoinColumn(name = "id_category", insertable = false, updatable = false)
     private EntityCategory parentCategory;
 
     @OneToMany(mappedBy = "parentBook", cascade = CascadeType.ALL)
-    private List<EntityLoan> childLoan;
+    private List<EntityLoan> childLoans;
 }

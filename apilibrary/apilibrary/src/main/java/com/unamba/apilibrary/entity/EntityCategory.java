@@ -17,19 +17,26 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EntityCategory {
+
     @Id
-    @Column(name = "idCategory")
+    @Column(name = "id_category")
     private String idCategory;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "createdAt")
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "created_at")
     private Date createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private Date updatedAt;
 
     @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
-    private List<EntityBook> childBook;
+    private List<EntityBook> childBooks;
 }

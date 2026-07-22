@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RequestBookInsert {
+public class RequestBookUpdate {
 
     @NotBlank(message = "El código es obligatorio.")
     private String code;
@@ -20,9 +20,9 @@ public class RequestBookInsert {
 
     @NotBlank(message = "El autor es obligatorio.")
     private String author;
-    
+
     private String description;
-    
+
     private Integer publicationYear;
 
     @NotNull(message = "El stock total es obligatorio.")

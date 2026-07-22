@@ -7,9 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RequestAuthLogin {
-    @NotBlank(message = "The field \"email\" is required.")
+    @NotBlank(message = "El correo institucional es obligatorio.")
     private String email;
 
-    @NotBlank(message = "The field \"password\" is required.")
+    @NotBlank(message = "El DNI es obligatorio.")
     private String password;
 }

@@ -12,5 +12,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ResponseBookGetAll extends ResponseGeneric {
-    List<Map<String, Object>> listBook = new ArrayList<>();
+    List<BookDto> listBook = new ArrayList<>();
 }

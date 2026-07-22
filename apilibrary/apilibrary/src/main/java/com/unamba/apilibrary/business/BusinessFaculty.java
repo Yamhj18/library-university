@@ -25,7 +25,7 @@ public class BusinessFaculty {
 
         list.forEach(f -> {
             Map<String, String> map = new HashMap<>();
-            map.put("idFaculty", f.getIdFaculty());
+            map.put("idFaculty", String.valueOf(f.getIdFaculty()));
             map.put("name", f.getName());
             response.getListFaculty().add(map);
         });

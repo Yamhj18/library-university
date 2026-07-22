@@ -1,11 +1,13 @@
 package com.unamba.apilibrary.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unamba.apilibrary.business.BusinessAuth;
@@ -21,9 +23,11 @@ import jakarta.validation.Valid;
 public class AuthController {
 
     private final BusinessAuth businessAuth;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(BusinessAuth businessAuth) {
+    public AuthController(BusinessAuth businessAuth, PasswordEncoder passwordEncoder) {
         this.businessAuth = businessAuth;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping(path = "login")
@@ -40,7 +44,7 @@ public class AuthController {
             response = businessAuth.login(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return null;
+            return ResponseEntity.internalServerError().build();
         }
     }
 
@@ -58,15 +62,14 @@ public class AuthController {
             response = businessAuth.register(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return null;
+            return ResponseEntity.internalServerError().build();
         }
     }
 
     @GetMapping(path = "generatehash")
-    public ResponseEntity<String> generateHash() {
-        org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder encoder = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
-        String hash = encoder.encode("password123");
+    public ResponseEntity<String> generateHash(
+            @RequestParam(defaultValue = "00000001") String value) {
+        String hash = passwordEncoder.encode(value);
         return ResponseEntity.ok(hash);
     }
-
 }

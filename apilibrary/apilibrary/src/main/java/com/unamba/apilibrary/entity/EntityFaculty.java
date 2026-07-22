@@ -1,29 +1,44 @@
 package com.unamba.apilibrary.entity;
 
-import java.util.Date;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tfaculty")
-@Getter
-@Setter
+@Table(name = "tprofessional_school") // o "professional_schools" si quieres usar tu diseño original
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EntityFaculty {
-    @Id
-    @Column(name = "idFaculty")
-    private String idFaculty;
 
-    @Column(name = "name")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idFaculty;
+
+    @Column(nullable = false, unique = true, length = 120)
     private String name;
 
-    @Column(name = "createdAt")
-    private Date createdAt;
+    @Column(length = 120)
+    private String description;
 
-    @Column(name = "updatedAt")
-    private Date updatedAt;
+    @Column(length = 50)
+    private String status; // ACTIVE, INACTIVE
+
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

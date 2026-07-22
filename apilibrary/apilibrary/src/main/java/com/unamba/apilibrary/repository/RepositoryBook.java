@@ -16,8 +16,16 @@ public interface RepositoryBook extends JpaRepository<EntityBook, String> {
             "(:search IS NULL OR LOWER(b.title) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(b.author) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(b.code) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
-            "(:idCategory IS NULL OR b.idCategory = :idCategory)")
+            "(:idCategory IS NULL OR b.idCategory = :idCategory) " +
+            "ORDER BY b.createdAt DESC")
     List<EntityBook> findBySearchAndCategory(
             @Param("search") String search,
             @Param("idCategory") String idCategory);
+            
+    boolean existsByCode(String code);
+
+    boolean existsByCodeAndIdBookNot(String code, String idBook);
+
+    @Query("SELECT b FROM EntityBook b WHERE b.idBook = :id")
+    EntityBook findByIdBook(@Param("id") String id);
 }

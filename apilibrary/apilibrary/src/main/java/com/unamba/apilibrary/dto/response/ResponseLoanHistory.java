@@ -11,7 +11,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ResponseLoanGetAll extends ResponseGeneric {
+public class ResponseLoanHistory extends ResponseGeneric {
     List<LoanDto> listLoan = new ArrayList<>();
-    List<LoanDto> listOverdue = new ArrayList<>();
 }

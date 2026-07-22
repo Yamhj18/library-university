@@ -21,12 +21,13 @@ public class BusinessCategory {
     public ResponseCategoryGetAll getAll() {
         ResponseCategoryGetAll response = new ResponseCategoryGetAll();
 
-        List<EntityCategory> list = repositoryCategory.findAll();
+        List<EntityCategory> list = repositoryCategory.findAllActive();
 
         list.forEach(c -> {
             Map<String, String> map = new HashMap<>();
-            map.put("idCategory", c.getIdCategory());
+            map.put("idCategory", String.valueOf(c.getIdCategory()));
             map.put("name", c.getName());
+            map.put("description", c.getDescription());
             response.getListCategory().add(map);
         });
 

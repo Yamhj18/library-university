@@ -17,53 +17,65 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EntityLoan {
-    @Id
-    @Column(name = "idLoan")
-    private String idLoan;
 
-    @Column(name = "idBook")
-    private String idBook;
+    @Id
+    @Column(name = "id_loan")
+    private String idLoan;
 
     @Column(name = "code")
     private String code;
 
-    @Column(name = "studentCode")
-    private String studentCode;
+    @Column(name = "id_book")
+    private String idBook;
 
-    @Column(name = "studentName")
-    private String studentName;
+    @Column(name = "id_user")
+    private String idUser;
 
-    @Column(name = "faculty")
-    private String faculty;
+    @Column(name = "registered_by")
+    private String registeredBy;
 
-    @Column(name = "phoneNumber")
-    private String phoneNumber;
+    @Column(name = "quantity")
+    private Integer quantity;
 
-    @Column(name = "guaranteeType")
+    @Column(name = "guarantee_type")
     private String guaranteeType;
 
-    @Column(name = "guaranteeNumber")
+    @Column(name = "guarantee_number")
     private String guaranteeNumber;
 
-    @Column(name = "loanDate")
+    @Column(name = "loan_date")
     private Date loanDate;
 
-    @Column(name = "estimatedReturnDate")
+    @Column(name = "estimated_return_date")
     private Date estimatedReturnDate;
 
-    @Column(name = "actualReturnDate")
+    @Column(name = "actual_return_date")
     private Date actualReturnDate;
+
+    @Column(name = "observations")
+    private String observations;
+
+    @Column(name = "return_observations")
+    private String returnObservations;
 
     @Column(name = "status")
     private String status;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private Date createdAt;
 
-    @Column(name = "updatedAt")
+    @Column(name = "updated_at")
     private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idBook", insertable = false, updatable = false)
+    @JoinColumn(name = "id_book", insertable = false, updatable = false)
     private EntityBook parentBook;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user", insertable = false, updatable = false)
+    private EntityUser parentUser;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "registered_by", insertable = false, updatable = false)
+    private EntityUser registeredByUser;
 }
