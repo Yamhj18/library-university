@@ -12,10 +12,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.unamba.apilibrary.dto.response.ResponseGenericMessage;
 
+import org.springframework.security.access.AccessDeniedException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ResponseGenericMessage> handleAccessDenied(AccessDeniedException ex) {
+        ResponseGenericMessage response = new ResponseGenericMessage();
+        response.error();
+        response.listMessage.add("Acceso denegado: no cuenta con los permisos necesarios.");
+        log.warn("Access denied: {}", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ResponseGenericMessage> handleValidationExceptions(MethodArgumentNotValidException ex) {
