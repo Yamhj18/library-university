@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { Api } from '../../api/api';
 import { AuthService } from '../../api/auth.service';
 import { apibookGetall, apicategoryGetall, apibookUpdate, apibookDelete } from '../../api/functions';
+import { environment } from '../../environments/environments';
 
 @Component({
     selector: 'app-catalog',
@@ -44,7 +45,7 @@ export class Catalog implements OnInit {
     listCategoryForEdit: any[] = [];
     searchText: string = '';
     selectedCategory: any = null;
-    urlBase: string = 'http://localhost:8080';
+    urlBase: string = environment.urlBase;
 
     // Availability Filter
     selectedAvailability: any = { value: null, name: 'Cualquier Disponibilidad' };
