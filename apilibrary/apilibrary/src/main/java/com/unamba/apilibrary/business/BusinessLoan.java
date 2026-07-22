@@ -124,7 +124,7 @@ public class BusinessLoan {
         if (book.getStockAvailable() == 0) {
             book.setStatus(EnumBookStatus.UNAVAILABLE.toString());
         }
-        book.setUpdatedAt(new java.sql.Date(new Date().getTime()));
+        book.setUpdatedAt(new java.sql.Date(System.currentTimeMillis()));
         repositoryBook.save(book);
 
         response.success();
@@ -159,7 +159,7 @@ public class BusinessLoan {
         if (book != null) {
             book.setStockAvailable(book.getStockAvailable() + loan.getQuantity());
             book.setStatus(EnumBookStatus.AVAILABLE.toString());
-            book.setUpdatedAt(new java.sql.Date(new Date().getTime()));
+            book.setUpdatedAt(new java.sql.Date(System.currentTimeMillis()));
             repositoryBook.save(book);
         }
 
