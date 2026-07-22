@@ -12,29 +12,59 @@ import com.unamba.apilibrary.entity.EntityLoan;
 @Repository
 public interface RepositoryLoan extends JpaRepository<EntityLoan, String> {
 
-    @Query("SELECT l FROM EntityLoan l JOIN l.parentUser u WHERE " +
+    @Query("SELECT l FROM EntityLoan l " +
+            "LEFT JOIN FETCH l.parentBook " +
+            "LEFT JOIN FETCH l.parentUser u " +
+            "LEFT JOIN FETCH u.parentSchool " +
+            "LEFT JOIN FETCH l.registeredByUser " +
+            "WHERE " +
             "(:search IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.studentCode) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
             "l.status = 'Active' " +
             "ORDER BY l.loanDate ASC")
     List<EntityLoan> findActiveBySearch(@Param("search") String search);
 
-    @Query("SELECT l FROM EntityLoan l WHERE " +
+    @Query("SELECT l FROM EntityLoan l " +
+            "LEFT JOIN FETCH l.parentBook " +
+            "LEFT JOIN FETCH l.parentUser u " +
+            "LEFT JOIN FETCH u.parentSchool " +
+            "LEFT JOIN FETCH l.registeredByUser " +
+            "WHERE " +
             "l.status = 'Active' AND " +
             "l.estimatedReturnDate < CURRENT_DATE " +
             "ORDER BY l.estimatedReturnDate ASC")
     List<EntityLoan> findOverdue();
     
-    @Query("SELECT l FROM EntityLoan l WHERE l.idUser = :idUser ORDER BY l.loanDate DESC")
+    @Query("SELECT l FROM EntityLoan l " +
+            "LEFT JOIN FETCH l.parentBook " +
+            "LEFT JOIN FETCH l.parentUser u " +
+            "LEFT JOIN FETCH u.parentSchool " +
+            "LEFT JOIN FETCH l.registeredByUser " +
+            "WHERE l.idUser = :idUser ORDER BY l.loanDate DESC")
     List<EntityLoan> findByIdUser(@Param("idUser") String idUser);
     
-    @Query("SELECT l FROM EntityLoan l WHERE l.idUser = :idUser AND l.status = 'Active'")
+    @Query("SELECT l FROM EntityLoan l " +
+            "LEFT JOIN FETCH l.parentBook " +
+            "LEFT JOIN FETCH l.parentUser u " +
+            "LEFT JOIN FETCH u.parentSchool " +
+            "LEFT JOIN FETCH l.registeredByUser " +
+            "WHERE l.idUser = :idUser AND l.status = 'Active'")
     List<EntityLoan> findActiveByIdUser(@Param("idUser") String idUser);
 
-    @Query("SELECT l FROM EntityLoan l ORDER BY l.createdAt DESC")
+    @Query("SELECT l FROM EntityLoan l " +
+            "LEFT JOIN FETCH l.parentBook " +
+            "LEFT JOIN FETCH l.parentUser u " +
+            "LEFT JOIN FETCH u.parentSchool " +
+            "LEFT JOIN FETCH l.registeredByUser " +
+            "ORDER BY l.createdAt DESC")
     List<EntityLoan> findAllHistory();
 
-    @Query("SELECT l FROM EntityLoan l JOIN l.parentUser u WHERE " +
+    @Query("SELECT l FROM EntityLoan l " +
+            "LEFT JOIN FETCH l.parentBook " +
+            "LEFT JOIN FETCH l.parentUser u " +
+            "LEFT JOIN FETCH u.parentSchool " +
+            "LEFT JOIN FETCH l.registeredByUser " +
+            "WHERE " +
             "(:search IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.studentCode) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(l.code) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +

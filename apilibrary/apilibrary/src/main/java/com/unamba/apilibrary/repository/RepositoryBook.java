@@ -12,7 +12,7 @@ import com.unamba.apilibrary.entity.EntityBook;
 @Repository
 public interface RepositoryBook extends JpaRepository<EntityBook, String> {
 
-    @Query("SELECT b FROM EntityBook b WHERE " +
+    @Query("SELECT b FROM EntityBook b LEFT JOIN FETCH b.parentCategory WHERE " +
             "(:search IS NULL OR LOWER(b.title) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(b.author) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(b.code) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +

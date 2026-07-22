@@ -22,7 +22,7 @@ public interface RepositoryUser extends JpaRepository<EntityUser, String> {
 
     boolean existsByStudentCode(String studentCode);
 
-    @Query("SELECT u FROM EntityUser u WHERE u.role = 'STUDENT' AND u.status = 'Active' AND " +
+    @Query("SELECT u FROM EntityUser u LEFT JOIN FETCH u.parentSchool WHERE u.role = 'STUDENT' AND u.status = 'Active' AND " +
             "(:search IS NULL OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.studentCode) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.dni) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
@@ -32,7 +32,7 @@ public interface RepositoryUser extends JpaRepository<EntityUser, String> {
             @Param("search") String search,
             @Param("idSchool") String idSchool);
 
-    @Query("SELECT u FROM EntityUser u WHERE u.role = 'STUDENT' AND u.status = 'Active' AND " +
+    @Query("SELECT u FROM EntityUser u LEFT JOIN FETCH u.parentSchool WHERE u.role = 'STUDENT' AND u.status = 'Active' AND " +
             "(LOWER(u.fullName) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(u.studentCode) LIKE LOWER(CONCAT('%', :query, '%'))) " +
             "ORDER BY u.fullName ASC")
