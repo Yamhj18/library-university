@@ -33,7 +33,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost", "http://localhost:4200", "https://library-unamba.netlify.app"));
+        config.setAllowedOriginPatterns(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -50,11 +50,31 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+                        // Public endpoints
+                        .requestMatchers("/auth/generatehash").hasRole("ADMIN")
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/book/getall", "/bookimage/**", "/category/getall").permitAll()
-                        .requestMatchers("/book/insert").hasRole("ADMIN")
-                        .requestMatchers("/loan/**").hasRole("ADMIN")
+                        .requestMatchers("/book/getall", "/book/get/**", "/bookimage/**").permitAll()
+                        .requestMatchers("/category/getall").permitAll()
+                        .requestMatchers("/school/getall").permitAll()
+                        .requestMatchers("/config/getall").permitAll()
+
+                        // Student + Admin endpoints
+                        .requestMatchers("/loan/my-loans").hasAnyRole("STUDENT", "ADMIN")
+                        .requestMatchers("/student/profile/**").hasAnyRole("STUDENT", "ADMIN")
+
+                        // Admin-only endpoints
+                        .requestMatchers("/book/insert", "/book/update/**", "/book/delete/**").hasRole("ADMIN")
+                        .requestMatchers("/loan/getall", "/loan/insert", "/loan/return/**", "/loan/history",
+                                "/loan/student/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers("/student/getall", "/student/search", "/student/update/**",
+                                "/student/delete/**")
+                        .hasRole("ADMIN")
+                        .requestMatchers("/dashboard/**").hasRole("ADMIN")
+                        .requestMatchers("/config/update").hasRole("ADMIN")
                         .requestMatchers("/faculty/getall").hasRole("ADMIN")
+
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
