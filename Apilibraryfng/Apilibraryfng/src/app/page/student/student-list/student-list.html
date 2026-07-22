@@ -37,7 +37,7 @@
 </div>
 
 <div class="card overflow-hidden animate-fade-in-up" style="animation-delay: 0.1s;">
-    <p-table [value]="listStudent" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm">
+    <p-table [value]="listStudent" [loading]="loading" [paginator]="true" [rows]="10" responsiveLayout="scroll" styleClass="p-datatable-sm">
         <ng-template pTemplate="header">
             <tr>
                 <th class="bg-surface-50 text-surface-600 font-semibold py-3 px-4 text-left">Estudiante</th>

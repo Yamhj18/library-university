@@ -30,6 +30,7 @@ export class StudentList implements OnInit {
     listSchool: any[] = [];
     searchText: string = '';
     selectedSchool: any = null;
+    loading: boolean = false;
 
     constructor(
         private api: Api,
@@ -50,12 +51,15 @@ export class StudentList implements OnInit {
     }
 
     loadStudents(): void {
+        this.loading = true;
         this.api.invoke(apistudentGetall, {
             search: this.searchText || undefined,
             idSchool: this.selectedSchool?.idSchool || undefined
         }).then((response: any) => {
             const data = typeof response === 'string' ? JSON.parse(response) : response;
             this.listStudent = data.listStudent || [];
+        }).finally(() => {
+            this.loading = false;
         });
     }
 

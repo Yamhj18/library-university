@@ -30,6 +30,7 @@ export class LoanList implements OnInit {
     listLoan: any[] = [];
     listOverdue: any[] = [];
     searchText: string = '';
+    loading: boolean = false;
 
     constructor(private api: Api) {}
 
@@ -38,12 +39,15 @@ export class LoanList implements OnInit {
     }
 
     loadLoans(): void {
+        this.loading = true;
         this.api.invoke(apiloanGetall, {
             search: this.searchText || undefined
         }).then((response: any) => {
             const data = typeof response === 'string' ? JSON.parse(response) : response;
             this.listLoan = data.listLoan;
             this.listOverdue = data.listOverdue;
+        }).finally(() => {
+            this.loading = false;
         });
     }
 
