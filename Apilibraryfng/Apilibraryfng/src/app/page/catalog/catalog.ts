@@ -46,6 +46,7 @@ export class Catalog implements OnInit {
     searchText: string = '';
     selectedCategory: any = null;
     urlBase: string = environment.urlBase;
+    loading: boolean = false;
 
     // Availability Filter
     selectedAvailability: any = { value: null, name: 'Cualquier Disponibilidad' };
@@ -82,6 +83,7 @@ export class Catalog implements OnInit {
     }
 
     loadBooks(): void {
+        this.loading = true;
         this.api.invoke(apibookGetall, {
             search: this.searchText || undefined,
             idCategory: this.selectedCategory?.idCategory || undefined
@@ -89,6 +91,8 @@ export class Catalog implements OnInit {
             const data = typeof response === 'string' ? JSON.parse(response) : response;
             this.listBook = data.listBook || [];
             this.applyAvailabilityFilter();
+        }).finally(() => {
+            this.loading = false;
         });
     }
 

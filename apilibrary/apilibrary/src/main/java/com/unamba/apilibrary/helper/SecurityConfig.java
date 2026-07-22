@@ -33,7 +33,13 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:[*]",
+                "http://localhost",
+                "http://127.0.0.1:[*]",
+                "https://library-university.pages.dev",
+                "https://*.library-university.pages.dev"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -73,7 +79,6 @@ public class SecurityConfig {
                         .hasRole("ADMIN")
                         .requestMatchers("/dashboard/**").hasRole("ADMIN")
                         .requestMatchers("/config/update").hasRole("ADMIN")
-                        .requestMatchers("/faculty/getall").hasRole("ADMIN")
 
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
