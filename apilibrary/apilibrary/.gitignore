@@ -33,3 +33,6 @@ build/
 .vscode/
 
 .fake
+database_unamba_library.sql
+
+storage/bookimage/*
