@@ -1,6 +1,7 @@
 package com.unamba.apilibrary.dto.response;
 
-import java.util.Date;
+import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,9 +13,15 @@ public class LoanDto {
     private Integer quantity;
     private String guaranteeType;
     private String guaranteeNumber;
-    private Date loanDate;
-    private Date estimatedReturnDate;
-    private Date actualReturnDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate loanDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate estimatedReturnDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate actualReturnDate;
     private String observations;
     private String returnObservations;
     private String status;

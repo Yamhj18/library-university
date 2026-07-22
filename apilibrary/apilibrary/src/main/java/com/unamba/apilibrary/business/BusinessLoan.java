@@ -1,6 +1,7 @@
 package com.unamba.apilibrary.business;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,11 +110,11 @@ public class BusinessLoan {
         entity.setCode(GenericHelper.generateCode());
         entity.setGuaranteeType(request.getGuaranteeType());
         entity.setGuaranteeNumber(request.getGuaranteeNumber());
-        entity.setLoanDate(new java.sql.Date(new Date().getTime()));
-        entity.setEstimatedReturnDate(java.sql.Date.valueOf(request.getEstimatedReturnDate()));
+        entity.setLoanDate(LocalDate.now());
+        entity.setEstimatedReturnDate(LocalDate.parse(request.getEstimatedReturnDate()));
         entity.setObservations(request.getObservations());
         entity.setStatus(EnumLoanStatus.ACTIVE.toString());
-        entity.setCreatedAt(new java.sql.Date(new Date().getTime()));
+        entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(entity.getCreatedAt());
 
         repositoryLoan.save(entity);
@@ -146,10 +147,11 @@ public class BusinessLoan {
             return response;
         }
 
-        loan.setActualReturnDate(new java.sql.Date(new Date().getTime()));
+        loan.setActualReturnDate(LocalDate.now());
         loan.setStatus(EnumLoanStatus.RETURNED.toString());
         loan.setReturnObservations(request != null ? request.getObservations() : null);
-        loan.setUpdatedAt(new java.sql.Date(new Date().getTime()));
+        loan.setUpdatedAt(LocalDateTime.now());
+        repositoryLoan.save(loan);
         repositoryLoan.save(loan);
 
         // Update book stock available

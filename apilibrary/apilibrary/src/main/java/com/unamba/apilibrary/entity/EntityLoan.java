@@ -1,6 +1,7 @@
 package com.unamba.apilibrary.entity;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,13 +45,13 @@ public class EntityLoan {
     private String guaranteeNumber;
 
     @Column(name = "loan_date")
-    private Date loanDate;
+    private LocalDate loanDate;
 
     @Column(name = "estimated_return_date")
-    private Date estimatedReturnDate;
+    private LocalDate estimatedReturnDate;
 
     @Column(name = "actual_return_date")
-    private Date actualReturnDate;
+    private LocalDate actualReturnDate;
 
     @Column(name = "observations")
     private String observations;
@@ -62,10 +63,10 @@ public class EntityLoan {
     private String status;
 
     @Column(name = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_book", insertable = false, updatable = false)
